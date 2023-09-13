@@ -22,8 +22,7 @@ O principal objetivo deste projeto é criar uma ferramenta eficiente e intuitiva
 
 - Linguagem de Programação: Java
 - Banco de Dados: SQLITE
-- Interface Gráfica: Biblioteca Swing (Java)
-- Gerenciamento de Dependências: Maven
+- Interface Gráfica: Biblioteca JFrame (Java)
 
 <!-- ## Como Executar o Projeto
 
