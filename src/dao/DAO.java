@@ -11,7 +11,6 @@ import javax.swing.JOptionPane;
 
 import controller.Conexao;
 import model.Team;
-import view.CreateTeam;
 import view.FirstView;
 import view.JLogin;
 import model.Players;
@@ -20,7 +19,7 @@ import view.JPrincipal;
 public class DAO {
 
     private static PreparedStatement preparedStatement = null;
-    private static ResultSet resultSet = null;
+    public static ResultSet resultSet = null;
     private static int idDoTime;
 
     private static String CHECK_TEAM_EXISTENCE = "SELECT COUNT(*) FROM team WHERE name = ? OR tecnico = ?";
@@ -409,7 +408,8 @@ public class DAO {
         }
     }
 
-    public void fecharConexao(Connection connection) {
+
+    public static void fecharConexao(Connection connection) {
         try {
             if (connection != null && !connection.isClosed()) {
                 connection.close();

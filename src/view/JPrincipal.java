@@ -3,12 +3,9 @@ package view;
 import java.awt.Color;
 import java.awt.EventQueue;
 
-import javax.swing.ImageIcon;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
+import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.TableRowSorter;
-import javax.swing.JTable;
 
 import dao.DAO;
 import model.ModelTable;
@@ -17,12 +14,10 @@ import model.ModelTableRanking;
 import model.Players;
 import model.Team;
 
-import javax.swing.JLabel;
 import java.awt.Font;
-import javax.swing.JScrollPane;
-import javax.swing.JTextField;
-import javax.swing.RowFilter;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 import java.awt.event.KeyAdapter;
@@ -131,7 +126,20 @@ public class JPrincipal extends JFrame {
 //		ModelTableRanking modelTableRanking = new ModelTableRanking(team); // Renomeado para evitar conflito de nomes
 //		teamTable = new JTable(modelTableRanking); // Configure o modelo para a tabela
 //		teamPane.setViewportView(teamTable); // Defina a tabela no painel de rolagem
+		JButton backButton = new JButton("Voltar");
+		backButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				dispose();
+				FirstView.main(new String[0]);
+			}
+		});
+		backButton.setBounds(10, 11, 89, 23);
+		backButton.setForeground(new Color(255, 255, 255));
+		backButton.setBackground(new Color(59, 130, 246));
+		contentPane.add(backButton);
 	}
+
+
 
 	private void filtrar() {
 		String busca = searchPlayer.getText().trim();

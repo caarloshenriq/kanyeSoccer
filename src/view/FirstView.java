@@ -94,6 +94,8 @@ public class FirstView extends JFrame {
         JButton games = new JButton("PARTIDAS");
         games.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                dispose();
+                Games.main(new String[0]);
             }
         });
         games.setBounds(635, 212, 121, 34);
