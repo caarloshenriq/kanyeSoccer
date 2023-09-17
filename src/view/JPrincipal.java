@@ -39,7 +39,6 @@ public class JPrincipal extends JFrame {
 	private JScrollPane playersPane;
 	private JTable playersTable;
 	private ArrayList<Players> players;
-	private ArrayList<Team> team;
 	private JTable teamTable;
 	private TableRowSorter<ModelTable> rowSorter;
 
@@ -75,12 +74,7 @@ public class JPrincipal extends JFrame {
 
 			e.printStackTrace();
 		}
-		try {
-			//team = dao.listarRanking();
-		} catch (Exception e) {
-
-			e.printStackTrace();
-		}
+		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 930, 493);
 		contentPane = new JPanel();
@@ -119,13 +113,6 @@ public class JPrincipal extends JFrame {
 		playersTable.setRowSorter(rowSorter);
 		playersPane.setViewportView(playersTable);
 
-
-//		JScrollPane teamPane = new JScrollPane();
-//		teamPane.setBounds(765, 43, 139, 386);
-//		contentPane.add(teamPane);
-//		ModelTableRanking modelTableRanking = new ModelTableRanking(team); // Renomeado para evitar conflito de nomes
-//		teamTable = new JTable(modelTableRanking); // Configure o modelo para a tabela
-//		teamPane.setViewportView(teamTable); // Defina a tabela no painel de rolagem
 		JButton backButton = new JButton("Voltar");
 		backButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {

@@ -1,5 +1,6 @@
 package dao;
 
+import java.awt.*;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -10,11 +11,14 @@ import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 
 import controller.Conexao;
+import model.Match;
 import model.Team;
 import view.FirstView;
 import view.JLogin;
 import model.Players;
 import view.JPrincipal;
+
+import static dao.BD.connection;
 
 public class DAO {
 
@@ -22,19 +26,16 @@ public class DAO {
     public static ResultSet resultSet = null;
     private static int idDoTime;
 
-    private static String CHECK_TEAM_EXISTENCE = "SELECT COUNT(*) FROM team WHERE name = ? OR tecnico = ?";
+    private static String CHECK_TEAM_EXISTENCE = "SELECT COUNT(*) FROM player WHERE name = ?";
     private static String LOGIN = "SELECT * FROM player WHERE name = ? AND password = ?";
-    private static String CREATE_TEAM = "INSERT INTO team (name, password, tecnico) VALUES (?, ?, ?)";
+
     private static String CREATE_PLAYER = "INSERT INTO player (name, password, number, position) VALUES (?,?,?,?);";
-    private static String CONSULT_PLAYER = "SELECT id,name,gols,number,position FROM player WHERE Id = ?";
+
     private static String LIST_PLAYER = "SELECT id,name,gols,number,position FROM player WHERE 1+1";
-    private static String ALTER_TEAM = "UPDATE team SET name = ?, tecnico = ? WHERE id = ?";
-    private static String ALTER_PLAYER = "UPDATE player SET name = ?, number = ?, position = ? WHERE id = ?";
-    private static String DELETE_TEAM = "DELETE FROM team  WHERE id = ?";
-    private static String DELETE_PLAYER = "DELETE FROM player  WHERE id = ?";
-    private static String CONSULT_TEAM = "SELECT name, password FROM team WHERE name = ? AND password = ?";
     private static String RANKING_TEAMS = "SELECT name, vitorias FROM team ORDER BY vitorias DESC;";
-    private static String CREATE_GAME = "INSERT INTO partidas (team1_id, team2_id) VALUES (?,?)";
+    private static String CREATE_GAME = "INSERT INTO partidas (team1_id, team2_id, dategame) VALUES (?,?,?)";
+
+    private static String getGames = "SELECT p.id, t1.name AS time1, team1_goals AS gol1, team2_goals AS gol2, t2.name AS time2 FROM partidas p JOIN team t1 ON p.team1_id = t1.id JOIN team t2 ON p.team2_id = t2.id;";
 
     public DAO() {
 
@@ -44,43 +45,6 @@ public class DAO {
 
     }
 
-    public void cadastrarTeam(Team team) {
-        Connection connection = Conexao.getInstancia().abrirConexao();
-
-        String queryCheckExistence = CHECK_TEAM_EXISTENCE;
-        String queryCreateTeam = CREATE_TEAM;
-        try {
-            // Check if name or technician already exist
-            PreparedStatement checkExistenceStatement = connection.prepareStatement(queryCheckExistence);
-            checkExistenceStatement.setString(1, team.getName());
-            checkExistenceStatement.setString(2, team.getTecnico());
-            ResultSet resultSet = checkExistenceStatement.executeQuery();
-            if (resultSet.next()) {
-                int count = resultSet.getInt(1);
-                if (count > 0) {
-                    JOptionPane.showMessageDialog(null,
-                            "Nome do time ou técnico já estão em uso. Não é possível criar o time.");
-                    return;
-                }
-            }
-
-            // Create team if name and technician are available
-            PreparedStatement createTeamStatement = connection.prepareStatement(queryCreateTeam);
-            int i = 1;
-            createTeamStatement.setString(i++, team.getName());
-            createTeamStatement.setString(i++, team.getPassword());
-            createTeamStatement.setString(i++, team.getTecnico());
-
-            createTeamStatement.executeUpdate(); // Use executeUpdate() for INSERT statements
-            connection.commit();
-
-            JOptionPane.showMessageDialog(null, "Time criado com sucesso!!!");
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            fecharConexao(connection);
-        }
-    }
 
     public void realizarLogin(Players players) {
         Connection connection = Conexao.getInstancia().abrirConexao();
@@ -97,8 +61,6 @@ public class DAO {
                 // Se o resultado contiver uma linha, isso significa que o login foi
                 // bem-sucedido
                 JOptionPane.showMessageDialog(null, "Login Bem sucedido.");
-                idDoTime = resultSet.getInt("id");
-                System.out.println("id do time é: " + idDoTime);
                 dispose();
                 FirstView.main(new String[0]);
             } else {
@@ -117,16 +79,28 @@ public class DAO {
 
     public void cadastrarJogador(Players player) {
         try (Connection connection = Conexao.getInstancia().abrirConexao()) {
+            String queryCheckExistence = CHECK_TEAM_EXISTENCE;
             String query = CREATE_PLAYER;
 
             System.out.println("criacão do time id: " + idDoTime);
-            try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-
+            try {
+                PreparedStatement checkExistenceStatement = connection.prepareStatement(queryCheckExistence);
+                checkExistenceStatement.setString(1, player.getName());
+                ResultSet resultSet = checkExistenceStatement.executeQuery();
+                if (resultSet.next()) {
+                    int count = resultSet.getInt(1);
+                    if (count > 0) {
+                        JOptionPane.showMessageDialog(null,
+                                "Nome de jogador já esta em uso, Tente outro!!");
+                        return;
+                    }
+                }
+                PreparedStatement createPlayerStatement = connection.prepareStatement(query);
                 int i = 1;
-                preparedStatement.setString(i++, player.getName());
-                preparedStatement.setString(i++, player.getPassword());
-                preparedStatement.setString(i++, player.getNumber());
-                preparedStatement.setString(i++, player.getPosition());
+                createPlayerStatement.setString(i++, player.getName());
+                createPlayerStatement.setString(i++, player.getPassword());
+                createPlayerStatement.setString(i++, player.getNumber());
+                createPlayerStatement.setString(i++, player.getPosition());
 
 
                 preparedStatement.execute();
@@ -134,156 +108,17 @@ public class DAO {
 
                 JOptionPane.showMessageDialog(null, "Jogador cadastrado com sucesso!!!");
                 dispose();
-                JPrincipal jPrincipal = new JPrincipal();
-                jPrincipal.setLocationRelativeTo(jPrincipal);
-                jPrincipal.setVisible(true);
-                jPrincipal.setTitle("Ye Soccer");
-                ImageIcon image = new ImageIcon("ye-face.png");
-                jPrincipal.setIconImage(image.getImage());
+                FirstView.main(new String[0]);
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
             }
         } catch (Exception e) {
             e.printStackTrace();
-        }
-    }
-
-    public Players consultarPlayer(String id) throws Exception {
-        Connection connection = Conexao.getInstancia().abrirConexao();
-        Players players = null;
-        String query = CONSULT_PLAYER;
-        try {
-
-            preparedStatement = connection.prepareStatement(query);
-            int i = 1;
-            preparedStatement.setString(i++, id);
-
-            resultSet = preparedStatement.executeQuery();
-            // String id, String name, String gols, String number, String position, String
-            // teamId
-            while (resultSet.next()) {
-                players = new Players(resultSet.getString("id"),
-                        resultSet.getString("name"),
-                        resultSet.getString("gols"),
-                        resultSet.getString("number"),
-                        resultSet.getString("position"), query);
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            fecharConexao(connection);
-        }
-        if (players == null) {
-            JOptionPane.showMessageDialog(null, "Não foi possivel encontrar o jogador selecionado", "",
-                    JOptionPane.WARNING_MESSAGE);
-            throw new Exception("Não foi possivel localizar o Jogador selecionado");
-        }
-        return players;
-    }
-
-    public void alterarTeam(String id, Team team) {
-        Connection connection = Conexao.getInstancia().abrirConexao();
-
-        String query = ALTER_TEAM;
-        try {
-
-            preparedStatement = connection.prepareStatement(query);
-
-            int i = 1;
-            preparedStatement.setString(i++, team.getName());
-            preparedStatement.setString(i++, team.getTecnico());
-            preparedStatement.setString(i++, id);
-
-            preparedStatement.execute();
-            connection.commit();
-
-            JOptionPane.showMessageDialog(null, "Time atualizado com sucesso!!!");
-        } catch (Exception e) {
-            e.printStackTrace();
         } finally {
             fecharConexao(connection);
         }
     }
 
-    public void alterarPlayer(String id, Players player) {
-        Connection connection = Conexao.getInstancia().abrirConexao();
-
-        String query = ALTER_PLAYER;
-        try {
-            preparedStatement = connection.prepareStatement(query);
-
-            int i = 1;
-            preparedStatement.setString(i++, player.getName());
-            preparedStatement.setString(i++, player.getNumber());
-            preparedStatement.setString(i++, player.getPosition());
-            preparedStatement.setString(i++, id);
-
-            preparedStatement.execute();
-            connection.commit();
-
-            JOptionPane.showMessageDialog(null, "Jogador atualizado com sucesso!!!");
-            dispose();
-            JPrincipal jPrincipal = new JPrincipal();
-            jPrincipal.setLocationRelativeTo(jPrincipal);
-            jPrincipal.setVisible(true);
-            jPrincipal.setTitle("Ye Soccer");
-            ImageIcon image = new ImageIcon("ye-face.png");
-            jPrincipal.setIconImage(image.getImage());
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            fecharConexao(connection);
-        }
-    }
-
-    public void excluirTeam(String id) {
-        Connection connection = Conexao.getInstancia().abrirConexao();
-
-        String query = DELETE_TEAM;
-        try {
-
-            preparedStatement = connection.prepareStatement(query);
-            // name, password, tecnico
-            int i = 1;
-            preparedStatement.setString(i++, id);
-
-            preparedStatement.execute();
-            connection.commit();
-
-            JOptionPane.showMessageDialog(null, "Time excluido com sucesso!!!");
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            fecharConexao(connection);
-        }
-    }
-
-    public void excluirPlayer(String id) {
-        Connection connection = Conexao.getInstancia().abrirConexao();
-
-        String query = DELETE_PLAYER;
-        try {
-
-            preparedStatement = connection.prepareStatement(query);
-            // name, password, tecnico
-            int i = 1;
-            preparedStatement.setString(i++, id);
-
-            preparedStatement.execute();
-            connection.commit();
-
-            JOptionPane.showMessageDialog(null, "Jogador excluido com sucesso!!!");
-            JPrincipal jPrincipal = new JPrincipal();
-            jPrincipal.setLocationRelativeTo(jPrincipal);
-            jPrincipal.setVisible(true);
-            jPrincipal.setTitle("Ye Soccer");
-            ImageIcon image = new ImageIcon("ye-face.png");
-            jPrincipal.setIconImage(image.getImage());
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            fecharConexao(connection);
-        }
-    }
 
     public ArrayList<Players> listarPlayers() throws Exception {
         Connection connection = Conexao.getInstancia().abrirConexao();
@@ -291,7 +126,7 @@ public class DAO {
         String query = LIST_PLAYER;
 
         try {
-            preparedStatement = connection.prepareStatement(query + idDoTime);
+            preparedStatement = connection.prepareStatement(query);
             resultSet = preparedStatement.executeQuery();
 
             while (resultSet.next()) {
@@ -299,7 +134,7 @@ public class DAO {
                         resultSet.getString("name"),
                         resultSet.getString("gols"),
                         resultSet.getString("number"),
-                        resultSet.getString("position"), query);
+                        resultSet.getString("position"));
 
                 playersList.add(player); // Adicione o jogador à lista
             }
@@ -319,40 +154,6 @@ public class DAO {
         return playersList;
     }
 
-    public Team consultarTeam(String teamName, String senhaCriptografada) throws Exception {
-        Connection connection = Conexao.getInstancia().abrirConexao();
-        Team team = null;
-        String query = CONSULT_TEAM;
-
-        try {
-            preparedStatement = connection.prepareStatement(query);
-            int i = 1;
-            preparedStatement.setString(i++, teamName);
-            preparedStatement.setString(i++, senhaCriptografada);
-
-            resultSet = preparedStatement.executeQuery();
-
-            if (resultSet.next()) {
-                team = new Team(resultSet.getString("id"),
-                        resultSet.getString("name"),
-                        resultSet.getString("password"),
-                        resultSet.getString("tecnico"), i); // Coloque aqui o nome da coluna correta
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            fecharConexao(connection);
-        }
-
-        if (team == null) {
-            JOptionPane.showMessageDialog(null, "Não foi possível encontrar o time selecionado", "",
-                    JOptionPane.WARNING_MESSAGE);
-            throw new Exception("Não foi possível localizar o time selecionado");
-        }
-
-        return team;
-    }
 
     public ArrayList<Team> listarRanking() throws Exception {
         Connection connection = Conexao.getInstancia().abrirConexao();
@@ -386,16 +187,16 @@ public class DAO {
         return teamsList;
     }
 
-    public static void createGame(int t1, int t2){
+    public static void createGame(int t1, int t2, String date) {
         try (Connection connection = Conexao.getInstancia().abrirConexao()) {
             String query = CREATE_GAME;
 
-            System.out.println("criacão do time id: " + idDoTime);
             try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
 
                 int i = 1;
                 preparedStatement.setInt(i++, t1);
                 preparedStatement.setInt(i++, t2);
+                preparedStatement.setString(i, date);
 
                 preparedStatement.execute();
                 connection.commit();
@@ -408,6 +209,39 @@ public class DAO {
         }
     }
 
+    public ArrayList<Match> listGame() throws Exception {
+        Connection connection = Conexao.getInstancia().abrirConexao();
+        ArrayList<Match> matchList = new ArrayList<>();
+        String query = getGames;
+
+        try {
+            preparedStatement = connection.prepareStatement(query);
+            resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                Match match = new Match(resultSet.getInt("id"),
+                        resultSet.getString("time1"),
+                        resultSet.getInt("gol1"),
+                        resultSet.getString("time2"),
+                        resultSet.getInt("gol2"));
+
+                matchList.add(match); // Adicione o jogador à lista
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            fecharConexao(connection);
+        }
+
+        if (matchList.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Não há partidas cadastradas.",
+                    "", JOptionPane.WARNING_MESSAGE);
+            throw new Exception("Não há partidas cadastradas!");
+        }
+
+        return matchList;
+    }
 
     public static void fecharConexao(Connection connection) {
         try {

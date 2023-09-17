@@ -1,12 +1,20 @@
 package view;
 
+import dao.DAO;
+import model.GameTable;
+import model.Match;
+import model.ModelTable;
+import model.Players;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
 
 public class Games extends JFrame {
 
@@ -16,6 +24,9 @@ public class Games extends JFrame {
     private static final long serialVersionUID = 1L;
     private JPanel contentPane;
     private JTable game;
+
+    private ArrayList<Match> match;
+    TableRowSorter<GameTable> rowSorter;
 
     /**
      * Launch the application.
@@ -41,7 +52,15 @@ public class Games extends JFrame {
     /**
      * Create the frame.
      */
-    public Games() {
+    public Games() throws Exception {
+        DAO dao = new DAO();
+        try {
+            match = dao.listGame();
+        } catch (Exception e) {
+
+            e.printStackTrace();
+        }
+
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(100, 100, 930, 493);
         contentPane = new JPanel();
@@ -61,18 +80,12 @@ public class Games extends JFrame {
         JScrollPane gamePanel = new JScrollPane();
         gamePanel.setBounds(97, 77, 657, 343);
         contentPane.add(gamePanel);
-
+        GameTable GameTable = new GameTable(match);
         game = new JTable();
-        game.setModel(new DefaultTableModel(
-                new Object[][] {
-                        {"tabajara fc", 2, null, 3, "sei la"}
-                },
-                new String[] {
-                        "TIME 1", "GOLS", " X", "GOLS", "TIME 2"
-                }
-        ));
-
+        game.setModel(GameTable);
         gamePanel.setViewportView(game);
+
+
         JButton backButton = new JButton("Voltar");
         backButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {

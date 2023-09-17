@@ -1,27 +1,32 @@
 package view;
 
+import dao.DAO;
+
 import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.Font;
 
-import javax.swing.*;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import java.awt.Choice;
+import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import dao.*;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import javax.swing.JFormattedTextField;
+import javax.swing.text.MaskFormatter;
+import javax.swing.JOptionPane;
 
 public class NewGame extends JFrame {
 
-    /**
-     *
-     */
     private static final long serialVersionUID = 1L;
     private JPanel contentPane;
 
-    /**
-     * Launch the application.
-     */
     public static void main(String[] args) {
         EventQueue.invokeLater(new Runnable() {
             public void run() {
@@ -29,9 +34,7 @@ public class NewGame extends JFrame {
                     NewGame frame = new NewGame();
                     frame.setVisible(true);
                     frame.setTitle("Ye Soccer");
-                    ImageIcon image = new ImageIcon("ye-face.png");
                     frame.setResizable(false);
-                    frame.setIconImage(image.getImage());
                     frame.setLocationRelativeTo(null);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -40,16 +43,12 @@ public class NewGame extends JFrame {
         });
     }
 
-    /**
-     * Create the frame.
-     */
     public NewGame() {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(100, 100, 930, 493);
         contentPane = new JPanel();
         contentPane.setBackground(new Color(209, 213, 219));
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-
         setContentPane(contentPane);
         contentPane.setLayout(null);
 
@@ -61,7 +60,6 @@ public class NewGame extends JFrame {
         Choice team1 = new Choice();
         team1.setBounds(79, 201, 220, 20);
         contentPane.add(team1);
-
         team1.add("tabajara fc");
         team1.add("charo fc");
 
@@ -86,34 +84,71 @@ public class NewGame extends JFrame {
         lblNewLabel_2_1.setBounds(690, 182, 56, 14);
         contentPane.add(lblNewLabel_2_1);
 
+        // Cria um formato de máscara para o campo de data (dd/MM/yyyy)
+        MaskFormatter dateFormatter = null;
+        try {
+            dateFormatter = new MaskFormatter("##/##/####");
+        } catch (ParseException e1) {
+            e1.printStackTrace();
+        }
+
+        JFormattedTextField dateTextField = new JFormattedTextField(dateFormatter);
+        dateTextField.setBounds(79, 308, 115, 20);
+        contentPane.add(dateTextField);
+
         JButton NewGame = new JButton("Criar Partida");
         NewGame.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
 
-                int t1;
-                int t2;
-                String time1 = (team1.getItem(team1.getSelectedIndex()));
-                String time2 = (team2.getItem(team2.getSelectedIndex()));
-
-                if(time1.equals("tabajara fc")){
-                    t1 = 1;
-                } else {
-                    t1 = 2;
+                SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+                Date dataSelecionada = null;
+                try {
+                    dataSelecionada = sdf.parse(dateTextField.getText());
+                } catch (ParseException ex) {
+                    ex.printStackTrace();
                 }
 
-                if(time2.equals("tabajara fc")){
-                    t2 = 1;
-                } else {
-                    t2 = 2;
-                }
 
-                if(t1 == t2){
-                    JOptionPane.showMessageDialog(null,
-                            "Os times não podem ser iguais.");
-                } else{
-                    DAO.createGame(t1,t2);
-                    dispose();
-                    FirstView.main(new String[0]);
+                Calendar dataPartida = Calendar.getInstance();
+                assert dataSelecionada != null;
+                dataPartida.setTime(dataSelecionada);
+                int anoPartida = dataPartida.get(Calendar.YEAR);
+                int mesPartida = dataPartida.get(Calendar.MONTH) + 1;
+
+                Calendar dataAtual = Calendar.getInstance();
+                int anoAtual = dataAtual.get(Calendar.YEAR);
+                int mesAtual = dataAtual.get(Calendar.MONTH) + 1;
+
+
+                if (anoPartida < anoAtual || (anoPartida == anoAtual && mesPartida < mesAtual)) {
+                    JOptionPane.showMessageDialog(NewGame.this, "A data da partida não pode ser anterior à data atual.", "Aviso", JOptionPane.WARNING_MESSAGE);
+                } else {
+                    int t1;
+                    int t2;
+                    String time1 = (team1.getItem(team1.getSelectedIndex()));
+                    String time2 = (team2.getItem(team2.getSelectedIndex()));
+
+                    if (time1.equals("tabajara fc")) {
+                        t1 = 1;
+                    } else {
+                        t1 = 2;
+                    }
+
+                    if (time2.equals("tabajara fc")) {
+                        t2 = 1;
+                    } else {
+                        t2 = 2;
+                    }
+
+                    if (t1 == t2) {
+                        JOptionPane.showMessageDialog(null,
+                                "Os times não podem ser iguais.");
+                    } else {
+                        String dataPartidaStr = sdf.format(dataPartida.getTime());
+                        DAO.createGame(t1, t2, dataPartidaStr);
+                        dispose();
+                        FirstView.main(new String[0]);
+                    }
                 }
             }
         });
@@ -121,6 +156,11 @@ public class NewGame extends JFrame {
         NewGame.setForeground(new Color(255, 255, 255));
         NewGame.setBackground(new Color(59, 130, 246));
         contentPane.add(NewGame);
+
+        JLabel lblNewLabel_2_2 = new JLabel("DIA DA PARTIDA");
+        lblNewLabel_2_2.setFont(new Font("Tahoma", Font.BOLD, 13));
+        lblNewLabel_2_2.setBounds(79, 283, 220, 14);
+        contentPane.add(lblNewLabel_2_2);
 
         JButton backButton = new JButton("Voltar");
         backButton.addActionListener(new ActionListener() {
