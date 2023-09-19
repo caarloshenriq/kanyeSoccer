@@ -10,10 +10,10 @@ public class GameTable extends AbstractTableModel {
     private static final long serialVersionUID = 1L;
 
     private static final String[] colunas = {
-            "ID", "TIME 1", "GOLS", " X", "GOLS", "TIME 2"
+            "ID", "TIME 1", "GOLS", " X", "GOLS", "TIME 2", "DATA"
     };
 
-    private ArrayList<Match> match;
+    public static ArrayList<Match> match;
 
     public GameTable(ArrayList<Match> match) {
         super();
@@ -33,7 +33,6 @@ public class GameTable extends AbstractTableModel {
         return colunas.length;
     }
 
-    @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
         Match game = match.get(rowIndex);
 
@@ -54,11 +53,13 @@ public class GameTable extends AbstractTableModel {
 
         } else if(columnIndex == 5 ){
             return game.getTeam2();
+        } else if(columnIndex == 6) {
+            return game.getDateGame();
         }
+
         else {
             return null;
         }
-
     }
     @Override
     public String getColumnName(int column) {

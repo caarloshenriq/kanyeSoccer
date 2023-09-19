@@ -35,7 +35,8 @@ public class DAO {
     private static String RANKING_TEAMS = "SELECT name, vitorias FROM team ORDER BY vitorias DESC;";
     private static String CREATE_GAME = "INSERT INTO partidas (team1_id, team2_id, dategame) VALUES (?,?,?)";
 
-    private static String getGames = "SELECT p.id, t1.name AS time1, team1_goals AS gol1, team2_goals AS gol2, t2.name AS time2 FROM partidas p JOIN team t1 ON p.team1_id = t1.id JOIN team t2 ON p.team2_id = t2.id;";
+    private static String CONSULT_PARTIDA = " SELECT * FROM partidas  " + " WHERE ID = ? ";
+    private static String getGames = "SELECT p.id, t1.name AS time1, team1_goals AS gol1, team2_goals AS gol2, t2.name AS time2, dategame as data FROM partidas p JOIN team t1 ON p.team1_id = t1.id JOIN team t2 ON p.team2_id = t2.id;";
 
     public DAO() {
 
@@ -223,7 +224,9 @@ public class DAO {
                         resultSet.getString("time1"),
                         resultSet.getInt("gol1"),
                         resultSet.getString("time2"),
-                        resultSet.getInt("gol2"));
+                        resultSet.getInt("gol2"),
+                        resultSet.getString("data"));
+
 
                 matchList.add(match); // Adicione o jogador à lista
             }
@@ -242,6 +245,42 @@ public class DAO {
 
         return matchList;
     }
+
+    public Match consultarPartida(String id) throws Exception {
+        Connection connection = Conexao.getInstancia().abrirConexao();
+        Match partida = null;
+        String query = CONSULT_PARTIDA; // Substitua CONSULT_PARTIDA pela consulta apropriada
+
+        try {
+            preparedStatement = connection.prepareStatement(query);
+            int i = 1;
+            preparedStatement.setString(i++, id);
+            resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+                partida = new Match(resultSet.getInt("id"),
+                        resultSet.getString("time1"),
+                        resultSet.getInt("gol1"),
+                        resultSet.getString("time2"),
+                        resultSet.getInt("gol2"),
+                        resultSet.getString("data"));
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            fecharConexao(connection);
+        }
+
+        if (partida == null) {
+            JOptionPane.showMessageDialog(null, "Não foi possível encontrar a partida selecionada.",
+                    "", JOptionPane.WARNING_MESSAGE);
+            throw new Exception("Não foi possível localizar a partida selecionada.");
+        }
+
+        return partida;
+    }
+
 
     public static void fecharConexao(Connection connection) {
         try {

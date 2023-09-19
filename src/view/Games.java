@@ -9,6 +9,8 @@ import model.Players;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 
 import javax.swing.*;
@@ -82,6 +84,21 @@ public class Games extends JFrame {
         contentPane.add(gamePanel);
         GameTable GameTable = new GameTable(match);
         game = new JTable();
+        game.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (e.getButton() == 1) {
+                    try {
+                        MatchModal matchModal = new MatchModal();
+                        matchModal.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+                        matchModal.setLocationRelativeTo(matchModal);
+                        matchModal.setVisible(true);
+                    } catch (Exception e1) {
+                        e1.printStackTrace();
+                    }
+                }
+            }
+        });
         game.setModel(GameTable);
         gamePanel.setViewportView(game);
 

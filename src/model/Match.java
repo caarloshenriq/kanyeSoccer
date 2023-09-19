@@ -1,23 +1,23 @@
 package model;
 
 public class Match {
-    protected int id;
-    protected String team1;
-    protected int gols1;
-    protected String team2;
-    protected int gols2;
+    private int id;
+    private String team1;
+    private int gols1;
+    private String team2;
+    private int gols2;
+    private String dateGame;
 
-    public Match(int id, String team1, int gols1, String team2, int gols2, String query) {
-    }
-
-    public Match(int id, String team1, int gols1, String team2, int gols2) {
+    public Match(int id, String team1, int gols1, String team2, int gols2, String dateGame) {
         super();
         this.id = id;
         this.team1 = team1;
         this.gols1 = gols1;
         this.team2 = team2;
         this.gols2 = gols2;
+        this.dateGame = dateGame;
     }
+
 
 
     public int getId() {
@@ -49,5 +49,12 @@ public class Match {
     }
     public void setGols2(int gols2) {
         this.gols2 = gols2;
+    }
+
+    public String getDateGame() {
+        return dateGame;
+    }
+    public void setDateGame(String dateGame) {
+        this.dateGame = dateGame;
     }
 }
