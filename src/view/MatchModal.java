@@ -35,7 +35,7 @@ public class MatchModal extends JFrame {
             public void run() {
                 try {
                     Match match = null;
-                    MatchModal frame = new MatchModal();
+                    MatchModal frame = new MatchModal(null,null,0,0);
                     frame.setVisible(true);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -47,7 +47,7 @@ public class MatchModal extends JFrame {
     /**
      * Create the frame.
      */
-    public MatchModal() {
+    public MatchModal(String team1, String team2, int gol1, int gol2) {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(100, 100, 479, 350);
         contentPane = new JPanel();
@@ -59,7 +59,7 @@ public class MatchModal extends JFrame {
         setContentPane(contentPane);
         contentPane.setLayout(null);
 
-        JLabel firstTeam = new JLabel("TIME 1");
+        JLabel firstTeam = new JLabel(team1);
         firstTeam.setFont(new Font("Tahoma", Font.BOLD, 13));
         firstTeam.setBounds(76, 117, 91, 14);
         contentPane.add(firstTeam);
@@ -68,13 +68,15 @@ public class MatchModal extends JFrame {
         result1.setBounds(52, 142, 86, 68);
         contentPane.add(result1);
         result1.setColumns(10);
+        result1.setText(String.valueOf(gol1));
 
         result2 = new JTextField();
         result2.setColumns(10);
         result2.setBounds(289, 142, 86, 68);
         contentPane.add(result2);
+        result2.setText(String.valueOf(gol2));
 
-        JLabel secondTeam = new JLabel("TIME 1");
+        JLabel secondTeam = new JLabel(team2);
         secondTeam.setFont(new Font("Tahoma", Font.BOLD, 13));
         secondTeam.setBounds(313, 117, 91, 14);
         contentPane.add(secondTeam);

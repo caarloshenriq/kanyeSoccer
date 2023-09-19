@@ -89,7 +89,14 @@ public class Games extends JFrame {
             public void mouseClicked(MouseEvent e) {
                 if (e.getButton() == 1) {
                     try {
-                        MatchModal matchModal = new MatchModal();
+                        Match matchSelected = dao.consultarPartida(GameTable.getValueAt(game.getSelectedRow(),0).toString());
+                        String team1 = matchSelected.getTeam1();
+                        String team2 = matchSelected.getTeam2();
+                        int gol1 = matchSelected.getGols1();
+                        int gol2 = matchSelected.getGols2();
+                        int id = matchSelected.getId();
+                        String date = matchSelected.getDateGame();
+                        MatchModal matchModal = new MatchModal(team1,team2,gol1,gol2);
                         matchModal.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
                         matchModal.setLocationRelativeTo(matchModal);
                         matchModal.setVisible(true);

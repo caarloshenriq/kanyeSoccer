@@ -35,7 +35,7 @@ public class DAO {
     private static String RANKING_TEAMS = "SELECT name, vitorias FROM team ORDER BY vitorias DESC;";
     private static String CREATE_GAME = "INSERT INTO partidas (team1_id, team2_id, dategame) VALUES (?,?,?)";
 
-    private static String CONSULT_PARTIDA = " SELECT * FROM partidas  " + " WHERE ID = ? ";
+    private static String CONSULT_PARTIDA = " SELECT p.id, t1.name AS time1, team1_goals AS gol1, team2_goals AS gol2, t2.name AS time2, dategame as data FROM partidas p JOIN team t1 ON p.team1_id = t1.id JOIN team t2 ON p.team2_id = t2.id WHERE p.id = ? ";
     private static String getGames = "SELECT p.id, t1.name AS time1, team1_goals AS gol1, team2_goals AS gol2, t2.name AS time2, dategame as data FROM partidas p JOIN team t1 ON p.team1_id = t1.id JOIN team t2 ON p.team2_id = t2.id;";
 
     public DAO() {
@@ -279,6 +279,33 @@ public class DAO {
         }
 
         return partida;
+    }
+
+    public void updateMatch(String id, String gols1, String gols2) {
+        Connection connection = Conexao.getInstancia().abrirConexao();
+
+        String query = "UPDATE partida set team1_goals = ?, team2_goals = ? WHERE id = ?";
+        try {
+            preparedStatement = connection.prepareStatement(query);
+
+            int i = 1;
+
+            preparedStatement.setString(i++, gols1);
+            preparedStatement.setString(i++, gols2);
+            preparedStatement.setString(i, id);
+
+            preparedStatement.execute();
+            connection.commit();
+
+            JOptionPane.showMessageDialog(null, "Partida alterada com sucesso");
+
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            fecharConexao(connection);
+        }
+
     }
 
 
