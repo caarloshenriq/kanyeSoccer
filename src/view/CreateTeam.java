@@ -108,10 +108,11 @@ public class CreateTeam extends JFrame {
 
 		Choice c = new Choice();
 		c.setBounds(229, 125, 155, 20);
-		c.add("lateral");
-		c.add("zagueiro");
-		c.add("goleiro");
+		c.add("Lateral");
+		c.add("Zagueiro");
+		c.add("Goleiro");
 		c.add("Meio-campo");
+		c.add("Atacante");
 		panel_1.add(c);
 
 		JLabel lblSuaSenha = new JLabel("Sua senha:");

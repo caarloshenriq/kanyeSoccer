@@ -115,7 +115,7 @@ public class JLogin extends JFrame {
 		passwordField.setBounds(46, 93, 199, 20);
 		panel.add(passwordField);
 
-		lblNewLabel = new JLabel("Crie um time");
+		lblNewLabel = new JLabel("Crie uma conta");
 		lblNewLabel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {

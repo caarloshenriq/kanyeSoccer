@@ -1,19 +1,17 @@
 package view;
 
+import dao.DAO;
 import model.Match;
 
 import java.awt.Color;
 import java.awt.EventQueue;
 
-import javax.swing.JFrame;
-import javax.swing.JPanel;
+import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-import javax.swing.JLabel;
 import java.awt.Font;
-import javax.swing.JTextField;
-import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.util.Calendar;
 
 import static model.GameTable.match;
 
@@ -34,9 +32,14 @@ public class MatchModal extends JFrame {
         EventQueue.invokeLater(new Runnable() {
             public void run() {
                 try {
+                    DAO dao = new DAO();
                     Match match = null;
-                    MatchModal frame = new MatchModal(null,null,0,0);
+                    MatchModal frame = new MatchModal(null, null, 0, 0, 0, null);
                     frame.setVisible(true);
+                    ImageIcon image = new ImageIcon("ye-face.png");
+                    frame.setResizable(false);
+                    frame.setLocationRelativeTo(null);
+                    frame.setIconImage(image.getImage());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -47,13 +50,13 @@ public class MatchModal extends JFrame {
     /**
      * Create the frame.
      */
-    public MatchModal(String team1, String team2, int gol1, int gol2) {
+    public MatchModal(String team1, String team2, int gol1, int gol2, int id, String date) {
+
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(100, 100, 479, 350);
         contentPane = new JPanel();
         contentPane.setBackground(new Color(209, 213, 219));
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-
 
 
         setContentPane(contentPane);
@@ -89,9 +92,45 @@ public class MatchModal extends JFrame {
         JButton btnNewButton = new JButton("SALVAR");
         btnNewButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                System.out.println("funcionando");
+                int team1id;
+                int team2id;
+
+                Calendar dataAtual = Calendar.getInstance();
+                int anoAtual = dataAtual.get(Calendar.YEAR);
+                int mesAtual = dataAtual.get(Calendar.MONTH) + 1;
+                int diaAtual = dataAtual.get(Calendar.DAY_OF_MONTH);
+                String dia;
+                if (mesAtual < 10) {
+                    dia = diaAtual + "/0" + mesAtual + "/" + anoAtual;
+                } else {
+                    dia = diaAtual + "/" + mesAtual + "/" + anoAtual;
+                }
+
+                if (date.equals(dia)) {
+                    if (team1.equals("tabajara fc")) {
+                        team1id = 1;
+                    } else {
+                        team1id = 2;
+                    }
+
+                    if (team2.equals("tabajara fc")) {
+                        team2id = 1;
+                    } else {
+                        team2id = 2;
+                    }
+                    int gols1 = Integer.parseInt(result1.getText());
+                    int gols2 = Integer.parseInt(result2.getText());
+
+                    DAO.updateMatch(id, gols1, gols2, team1id, team2id);
+                    dispose();
+                } else {
+                    JOptionPane.showMessageDialog(MatchModal.this, "A partida nao pode ser alterada pois ela nao ocorrerá hoje.", "Aviso", JOptionPane.WARNING_MESSAGE);
+                    dispose();
+                }
             }
         });
+        btnNewButton.setForeground(new Color(255, 255, 255));
+        btnNewButton.setBackground(new Color(59, 130, 246));
         btnNewButton.setBounds(167, 250, 89, 23);
         contentPane.add(btnNewButton);
     }

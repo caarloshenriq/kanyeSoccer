@@ -6,21 +6,16 @@ import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.Font;
 
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
+import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.Choice;
-import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import javax.swing.JFormattedTextField;
 import javax.swing.text.MaskFormatter;
-import javax.swing.JOptionPane;
 
 public class NewGame extends JFrame {
 
@@ -36,6 +31,8 @@ public class NewGame extends JFrame {
                     frame.setTitle("Ye Soccer");
                     frame.setResizable(false);
                     frame.setLocationRelativeTo(null);
+                    ImageIcon image = new ImageIcon("ye-face.png");
+                    frame.setIconImage(image.getImage());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

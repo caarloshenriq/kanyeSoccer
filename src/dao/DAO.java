@@ -31,7 +31,7 @@ public class DAO {
 
     private static String CREATE_PLAYER = "INSERT INTO player (name, password, number, position) VALUES (?,?,?,?);";
 
-    private static String LIST_PLAYER = "SELECT id,name,gols,number,position FROM player WHERE 1+1";
+    private static String LIST_PLAYER = "SELECT id,name,gols,number,position FROM player ORDER BY gols DESC";
     private static String RANKING_TEAMS = "SELECT name, vitorias FROM team ORDER BY vitorias DESC;";
     private static String CREATE_GAME = "INSERT INTO partidas (team1_id, team2_id, dategame) VALUES (?,?,?)";
 
@@ -78,12 +78,12 @@ public class DAO {
         }
     }
 
+
     public void cadastrarJogador(Players player) {
         try (Connection connection = Conexao.getInstancia().abrirConexao()) {
             String queryCheckExistence = CHECK_TEAM_EXISTENCE;
             String query = CREATE_PLAYER;
 
-            System.out.println("criacão do time id: " + idDoTime);
             try {
                 PreparedStatement checkExistenceStatement = connection.prepareStatement(queryCheckExistence);
                 checkExistenceStatement.setString(1, player.getName());
@@ -281,23 +281,41 @@ public class DAO {
         return partida;
     }
 
-    public void updateMatch(String id, String gols1, String gols2) {
+    public static void updateMatch(int id, int gols1, int gols2, int team1, int team2) {
         Connection connection = Conexao.getInstancia().abrirConexao();
 
-        String query = "UPDATE partida set team1_goals = ?, team2_goals = ? WHERE id = ?";
+        String query = "UPDATE partidas set team1_goals = ?, team2_goals = ? WHERE id = ?";
+        String updateWinner = "UPDATE team set vitorias = vitorias+ 1 WHERE id = ?";
+        int winner;
         try {
             preparedStatement = connection.prepareStatement(query);
 
             int i = 1;
 
-            preparedStatement.setString(i++, gols1);
-            preparedStatement.setString(i++, gols2);
-            preparedStatement.setString(i, id);
+            preparedStatement.setInt(i++, gols1);
+            preparedStatement.setInt(i++, gols2);
+            preparedStatement.setInt(i, id);
 
             preparedStatement.execute();
             connection.commit();
 
-            JOptionPane.showMessageDialog(null, "Partida alterada com sucesso");
+            if (gols1 == gols2) {
+                JOptionPane.showMessageDialog(null, "Partida alterada com sucesso");
+            } else {
+
+                if(gols1 > gols2){
+                    winner = team1;
+                } else {
+                    winner = team2;
+                }
+                preparedStatement = connection.prepareStatement(updateWinner);
+                int l = 1;
+
+                preparedStatement.setInt(l, winner);
+                preparedStatement.execute();
+                connection.commit();
+                JOptionPane.showMessageDialog(null, "Partida alterada com sucesso");
+            }
 
 
         } catch (SQLException e) {
