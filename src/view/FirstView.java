@@ -72,6 +72,8 @@ public class FirstView extends JFrame {
         JButton team = new JButton("TIMES");
         team.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                dispose();
+                Teams.main(new String[0]);
             }
         });
         team.setBounds(258, 212, 121, 34);

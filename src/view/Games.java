@@ -96,12 +96,16 @@ public class Games extends JFrame {
                         int gol2 = matchSelected.getGols2();
                         int id = matchSelected.getId();
                         String date = matchSelected.getDateGame();
+                        boolean status = matchSelected.getStatus();
 
-
-                        MatchModal matchModal = new MatchModal(team1, team2, gol1, gol2, id, date);
-                        matchModal.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-                        matchModal.setLocationRelativeTo(matchModal);
-                        matchModal.setVisible(true);
+                        if (status) {
+                            JOptionPane.showMessageDialog(Games.this, "Essa partida ja esta encerrada.", "Aviso", JOptionPane.WARNING_MESSAGE);
+                        } else {
+                            MatchModal matchModal = new MatchModal(team1, team2, gol1, gol2, id, date);
+                            matchModal.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+                            matchModal.setLocationRelativeTo(matchModal);
+                            matchModal.setVisible(true);
+                        }
                     } catch (Exception e1) {
                         e1.printStackTrace();
                     }

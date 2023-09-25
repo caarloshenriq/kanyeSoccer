@@ -7,8 +7,9 @@ public class Match {
     private String team2;
     private int gols2;
     private String dateGame;
+    private boolean status;
 
-    public Match(int id, String team1, int gols1, String team2, int gols2, String dateGame) {
+    public Match(int id, String team1, int gols1, String team2, int gols2, String dateGame, boolean status) {
         super();
         this.id = id;
         this.team1 = team1;
@@ -16,6 +17,7 @@ public class Match {
         this.team2 = team2;
         this.gols2 = gols2;
         this.dateGame = dateGame;
+        this.status = status;
     }
 
 
@@ -56,5 +58,12 @@ public class Match {
     }
     public void setDateGame(String dateGame) {
         this.dateGame = dateGame;
+    }
+
+    public boolean getStatus() {
+        return status;
+    }
+    public void setStatus(boolean status) {
+        this.status = status;
     }
 }

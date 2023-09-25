@@ -7,11 +7,8 @@ public class Team {
     protected String tecnico;
     protected int vitorias;
 
+
     public Team() {
-
-    }
-
-    public Team(String id, String name, String password, String tecnico, int vitorias) {
         super();
         this.id = id;
         this.name = name;

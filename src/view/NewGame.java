@@ -94,6 +94,7 @@ public class NewGame extends JFrame {
         contentPane.add(dateTextField);
 
         JButton NewGame = new JButton("Criar Partida");
+        MaskFormatter finalDateFormatter = dateFormatter;
         NewGame.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
 
@@ -117,7 +118,6 @@ public class NewGame extends JFrame {
                 int mesAtual = dataAtual.get(Calendar.MONTH) + 1;
 
                 String dataPartidaStr = sdf.format(dataPartida.getTime());
-
 
                 if (anoPartida < anoAtual || (anoPartida == anoAtual && mesPartida < mesAtual)) {
                     JOptionPane.showMessageDialog(NewGame.this, "A data da partida não pode ser anterior à data atual.", "Aviso", JOptionPane.WARNING_MESSAGE);

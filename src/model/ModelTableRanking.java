@@ -5,12 +5,12 @@ import javax.swing.table.AbstractTableModel;
 
 public class ModelTableRanking extends AbstractTableModel {
     /**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+     *
+     */
+    private static final long serialVersionUID = 1L;
 
-	private static final String[] colunas = {
-        "TIME", "VITORIAS"
+    private static final String[] colunas = {
+            "TIME", "VITORIAS", "TECNICO"
     };
 
     private final ArrayList<Team> team;
@@ -37,6 +37,8 @@ public class ModelTableRanking extends AbstractTableModel {
             return selectedTeam.getName();
         } else if (columnIndex == 1) {
             return selectedTeam.getVitorias();
+        } else if (columnIndex == 2) {
+            return selectedTeam.getTecnico();
         } else {
             return null;
         }

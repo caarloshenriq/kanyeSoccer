@@ -32,11 +32,11 @@ public class DAO {
     private static String CREATE_PLAYER = "INSERT INTO player (name, password, number, position) VALUES (?,?,?,?);";
 
     private static String LIST_PLAYER = "SELECT id,name,gols,number,position FROM player ORDER BY gols DESC";
-    private static String RANKING_TEAMS = "SELECT name, vitorias FROM team ORDER BY vitorias DESC;";
+    private static String RANKING_TEAMS = "SELECT name, vitorias, tecnico FROM team ORDER BY vitorias DESC;";
     private static String CREATE_GAME = "INSERT INTO partidas (team1_id, team2_id, dategame) VALUES (?,?,?)";
 
-    private static String CONSULT_PARTIDA = " SELECT p.id, t1.name AS time1, team1_goals AS gol1, team2_goals AS gol2, t2.name AS time2, dategame as data FROM partidas p JOIN team t1 ON p.team1_id = t1.id JOIN team t2 ON p.team2_id = t2.id WHERE p.id = ? ";
-    private static String getGames = "SELECT p.id, t1.name AS time1, team1_goals AS gol1, team2_goals AS gol2, t2.name AS time2, dategame as data FROM partidas p JOIN team t1 ON p.team1_id = t1.id JOIN team t2 ON p.team2_id = t2.id;";
+    private static String CONSULT_PARTIDA = " SELECT p.id, t1.name AS time1, team1_goals AS gol1, team2_goals AS gol2, t2.name AS time2, dategame as data, finalizada FROM partidas p JOIN team t1 ON p.team1_id = t1.id JOIN team t2 ON p.team2_id = t2.id WHERE p.id = ? ";
+    private static String getGames = "SELECT p.id, t1.name AS time1, team1_goals AS gol1, team2_goals AS gol2, t2.name AS time2, dategame as data, finalizada FROM partidas p JOIN team t1 ON p.team1_id = t1.id JOIN team t2 ON p.team2_id = t2.id;";
 
     public DAO() {
 
@@ -156,7 +156,7 @@ public class DAO {
     }
 
 
-    public ArrayList<Team> listarRanking() throws Exception {
+    public static ArrayList<Team> listarRanking() throws Exception {
         Connection connection = Conexao.getInstancia().abrirConexao();
         ArrayList<Team> teamsList = new ArrayList<>();
         String query = RANKING_TEAMS;
@@ -169,7 +169,7 @@ public class DAO {
                 Team team = new Team();
                 team.setName(resultSet.getString("name"));
                 team.setVitorias(resultSet.getInt("vitorias"));
-
+                team.setTecnico(resultSet.getString("tecnico"));
                 teamsList.add(team);
             }
 
@@ -225,7 +225,8 @@ public class DAO {
                         resultSet.getInt("gol1"),
                         resultSet.getString("time2"),
                         resultSet.getInt("gol2"),
-                        resultSet.getString("data"));
+                        resultSet.getString("data"),
+                        resultSet.getBoolean("finalizada"));
 
 
                 matchList.add(match); // Adicione o jogador à lista
@@ -263,7 +264,8 @@ public class DAO {
                         resultSet.getInt("gol1"),
                         resultSet.getString("time2"),
                         resultSet.getInt("gol2"),
-                        resultSet.getString("data"));
+                        resultSet.getString("data"),
+                        resultSet.getBoolean("finalizada"));
             }
 
         } catch (Exception e) {
@@ -284,7 +286,7 @@ public class DAO {
     public static void updateMatch(int id, int gols1, int gols2, int team1, int team2) {
         Connection connection = Conexao.getInstancia().abrirConexao();
 
-        String query = "UPDATE partidas set team1_goals = ?, team2_goals = ? WHERE id = ?";
+        String query = "UPDATE partidas set team1_goals = ?, team2_goals = ?, finalizada = 1 WHERE id = ?";
         String updateWinner = "UPDATE team set vitorias = vitorias+ 1 WHERE id = ?";
         int winner;
         try {
