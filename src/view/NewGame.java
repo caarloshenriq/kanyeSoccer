@@ -117,7 +117,7 @@ public class NewGame extends JFrame {
                 int anoAtual = dataAtual.get(Calendar.YEAR);
                 int mesAtual = dataAtual.get(Calendar.MONTH) + 1;
 
-                String dataPartidaStr = sdf.format(dataPartida.getTime());
+
 
                 if (anoPartida < anoAtual || (anoPartida == anoAtual && mesPartida < mesAtual)) {
                     JOptionPane.showMessageDialog(NewGame.this, "A data da partida não pode ser anterior à data atual.", "Aviso", JOptionPane.WARNING_MESSAGE);
@@ -143,7 +143,7 @@ public class NewGame extends JFrame {
                         JOptionPane.showMessageDialog(null,
                                 "Os times não podem ser iguais.");
                     } else {
-
+                        String dataPartidaStr = sdf.format(dataPartida.getTime());
                         DAO.createGame(t1, t2, dataPartidaStr);
                         dispose();
                         FirstView.main(new String[0]);

@@ -91,8 +91,7 @@ public class DAO {
                 if (resultSet.next()) {
                     int count = resultSet.getInt(1);
                     if (count > 0) {
-                        JOptionPane.showMessageDialog(null,
-                                "Nome de jogador já esta em uso, Tente outro!!");
+                        JOptionPane.showMessageDialog(null, "Nome de jogador já está em uso. Tente outro!!");
                         return;
                     }
                 }
@@ -101,10 +100,9 @@ public class DAO {
                 createPlayerStatement.setString(i++, player.getName());
                 createPlayerStatement.setString(i++, player.getPassword());
                 createPlayerStatement.setString(i++, player.getNumber());
-                createPlayerStatement.setString(i++, player.getPosition());
+                createPlayerStatement.setString(i, player.getPosition());
 
-
-                preparedStatement.execute();
+                createPlayerStatement.execute(); // Corrigido para usar createPlayerStatement
                 connection.commit();
 
                 JOptionPane.showMessageDialog(null, "Jogador cadastrado com sucesso!!!");

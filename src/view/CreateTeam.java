@@ -133,6 +133,7 @@ public class CreateTeam extends JFrame {
 				Players player = new Players("",nome, criptografia.criptografar(), null,number.getText(),position,null);
 				System.out.println(player.getName());
 				dao.cadastrarJogador(player);
+
 			}
 		});
 		button.setForeground(new Color(255, 255, 255));
