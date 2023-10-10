@@ -94,7 +94,7 @@ public class JLogin extends JFrame {
 				// Criptografia criptografia = new Criptografia(password, Criptografia.MD5);
 				Criptografia criptografia = new Criptografia(passwordField.getText(), Criptografia.MD5);
 
-				Players player = new Players(null,TeamName.getText(), criptografia.criptografar(), null,null,null,null);
+				Players player = new Players(0,TeamName.getText(), criptografia.criptografar(), null,null,null,null);
 
 				dao.realizarLogin(player);
 				dispose();

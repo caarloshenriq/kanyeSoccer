@@ -130,7 +130,7 @@ public class CreateTeam extends JFrame {
 
 				String position = (c.getItem(c.getSelectedIndex()));
 				String nome = name.getText();
-				Players player = new Players("",nome, criptografia.criptografar(), null,number.getText(),position,null);
+				Players player = new Players(0,nome, criptografia.criptografar(), null,number.getText(),position,null);
 				System.out.println(player.getName());
 				dao.cadastrarJogador(player);
 

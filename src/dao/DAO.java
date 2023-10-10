@@ -59,8 +59,6 @@ public class DAO {
             ResultSet resultSet = preparedStatement.executeQuery();
 
             if (resultSet.next()) {
-                // Se o resultado contiver uma linha, isso significa que o login foi
-                // bem-sucedido
                 JOptionPane.showMessageDialog(null, "Login Bem sucedido.");
                 dispose();
                 FirstView.main(new String[0]);
@@ -129,7 +127,7 @@ public class DAO {
             resultSet = preparedStatement.executeQuery();
 
             while (resultSet.next()) {
-                Players player = new Players(resultSet.getString("id"),
+                Players player = new Players(resultSet.getInt("id"),
                         resultSet.getString("name"),
                         resultSet.getString("gols"),
                         resultSet.getString("number"),

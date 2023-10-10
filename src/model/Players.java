@@ -1,7 +1,7 @@
 package model;
 
 public class Players {
-	protected String id;
+	protected  int id;
 	protected String name;
 	protected String password;
 	protected String gols;
@@ -12,7 +12,7 @@ public class Players {
 
 
 
-	public Players(String id, String name,String password, String gols, String number, String position, String teamId) {
+	public Players(int id, String name,String password, String gols, String number, String position, String teamId) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -23,7 +23,7 @@ public class Players {
 		this.teamId = teamId;
 	}
 
-	public Players(String id, String name, String gols, String number, String position) {
+	public Players(int id, String name, String gols, String number, String position) {
 		this.id = id;
 		this.name = name;
 		this.gols = gols;
@@ -31,10 +31,10 @@ public class Players {
 		this.position = position;
 	}
 
-	public String getId() {
+	public int getId() {
 		return id;
 	}
-	public void setId(String id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 	public String getName() {
