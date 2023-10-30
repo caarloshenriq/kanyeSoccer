@@ -6,6 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
@@ -47,7 +48,7 @@ public class DAO {
     }
 
 
-    public void realizarLogin(Players players) {
+    public boolean realizarLogin(Players players) {
         Connection connection = Conexao.getInstancia().abrirConexao();
         String query = LOGIN;
 
@@ -60,13 +61,10 @@ public class DAO {
 
             if (resultSet.next()) {
                 JOptionPane.showMessageDialog(null, "Login Bem sucedido.");
-                dispose();
-                FirstView.main(new String[0]);
+                return true;
             } else {
-                // Caso contrário, o login falhou
-                JOptionPane.showMessageDialog(null, "Nome do time e/ou senha inválidos");
-                dispose();
-                JLogin.main(new String[0]);
+                JOptionPane.showMessageDialog(null, "Nome do usuário e/ou senha inválidos");
+                return false;
 
             }
         } catch (Exception e) {
@@ -74,10 +72,11 @@ public class DAO {
         } finally {
             fecharConexao(connection);
         }
+        return true;
     }
 
 
-    public void cadastrarJogador(Players player) {
+    public boolean cadastrarJogador(Players player) {
         try (Connection connection = Conexao.getInstancia().abrirConexao()) {
             String queryCheckExistence = CHECK_TEAM_EXISTENCE;
             String query = CREATE_PLAYER;
@@ -90,7 +89,7 @@ public class DAO {
                     int count = resultSet.getInt(1);
                     if (count > 0) {
                         JOptionPane.showMessageDialog(null, "Nome de jogador já está em uso. Tente outro!!");
-                        return;
+                        return false;
                     }
                 }
                 PreparedStatement createPlayerStatement = connection.prepareStatement(query);
@@ -102,10 +101,8 @@ public class DAO {
 
                 createPlayerStatement.execute(); // Corrigido para usar createPlayerStatement
                 connection.commit();
-
                 JOptionPane.showMessageDialog(null, "Jogador cadastrado com sucesso!!!");
-                dispose();
-                FirstView.main(new String[0]);
+                return true;
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
@@ -114,6 +111,7 @@ public class DAO {
         } finally {
             fecharConexao(connection);
         }
+        return false;
     }
 
 
@@ -246,7 +244,7 @@ public class DAO {
     public Match consultarPartida(String id) throws Exception {
         Connection connection = Conexao.getInstancia().abrirConexao();
         Match partida = null;
-        String query = CONSULT_PARTIDA; // Substitua CONSULT_PARTIDA pela consulta apropriada
+        String query = CONSULT_PARTIDA;
 
         try {
             preparedStatement = connection.prepareStatement(query);
@@ -301,7 +299,7 @@ public class DAO {
                 JOptionPane.showMessageDialog(null, "Partida alterada com sucesso");
             } else {
 
-                if(gols1 > gols2){
+                if (gols1 > gols2) {
                     winner = team1;
                 } else {
                     winner = team2;
@@ -324,6 +322,58 @@ public class DAO {
 
     }
 
+    public static void PlayersMatch(List<Integer> team1, List<Integer> team2, int team1Id, int team2Id) {
+        Connection connection = Conexao.getInstancia().abrirConexao();
+        String getMatchid = "SELECT id FROM partidas ORDER BY id DESC LIMIT 1";
+        String insertQuery = "INSERT INTO playerPlay (playerId, teamId, matchId, situation) VALUES (?, ?, ?, ?)";
+
+        try {
+            connection.setAutoCommit(false);
+
+            int matchId = 0;
+            PreparedStatement getMatchIdStatement = connection.prepareStatement(getMatchid);
+            ResultSet resultSet = getMatchIdStatement.executeQuery();
+
+            if (resultSet.next()) {
+                matchId = resultSet.getInt("id");
+            }
+
+            for (Integer playerId : team1) {
+                PreparedStatement insertStatement = connection.prepareStatement(insertQuery);
+                insertStatement.setInt(1, playerId);
+                insertStatement.setInt(2, team1Id);
+                insertStatement.setInt(3, matchId);
+                insertStatement.setString(4,"Em casa");
+                insertStatement.executeUpdate();
+            }
+
+            for (Integer playerId : team2) {
+                PreparedStatement insertStatement = connection.prepareStatement(insertQuery);
+                insertStatement.setInt(1, playerId);
+                insertStatement.setInt(2, team2Id);
+                insertStatement.setInt(3, matchId);
+                insertStatement.setString(4, "visitante");
+                insertStatement.executeUpdate();
+            }
+
+            connection.commit();
+            JOptionPane.showMessageDialog(null, "Partida alterada com sucesso");
+
+        } catch (SQLException e) {
+            try {
+                connection.rollback();
+            } catch (SQLException ex) {
+                throw new RuntimeException(ex);
+            }
+            System.err.println("Erro ao inserir jogadores: " + e.getMessage());
+        } finally {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                System.err.println("Erro ao fechar a conexão: " + e.getMessage());
+            }
+        }
+    }
 
     public static void fecharConexao(Connection connection) {
         try {
@@ -334,5 +384,4 @@ public class DAO {
             e.printStackTrace();
         }
     }
-
 }
