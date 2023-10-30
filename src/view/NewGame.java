@@ -147,7 +147,15 @@ public class NewGame extends JFrame {
                         String dataPartidaStr = sdf.format(dataPartida.getTime());
                         DAO.createGame(t1, t2, dataPartidaStr);
                         dispose();
-                        FirstView.main(new String[0]);
+                        PlayersSelect playersModal = null;
+                        try {
+                            playersModal = new PlayersSelect(time1, time2, t1,t2);
+                        } catch (Exception ex) {
+                            throw new RuntimeException(ex);
+                        }
+                        playersModal.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+                        playersModal.setLocationRelativeTo(playersModal);
+                        playersModal.setVisible(true);
                     }
                 }
             }
