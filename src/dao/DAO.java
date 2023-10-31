@@ -38,7 +38,7 @@ public class DAO {
 
     private static String CONSULT_PARTIDA = " SELECT p.id, t1.name AS time1, team1_goals AS gol1, team2_goals AS gol2, t2.name AS time2, dategame as data, finalizada FROM partidas p JOIN team t1 ON p.team1_id = t1.id JOIN team t2 ON p.team2_id = t2.id WHERE p.id = ? ";
     private static String getGames = "SELECT p.id, t1.name AS time1, team1_goals AS gol1, team2_goals AS gol2, t2.name AS time2, dategame as data, finalizada FROM partidas p JOIN team t1 ON p.team1_id = t1.id JOIN team t2 ON p.team2_id = t2.id;";
-
+    private static String playersGame = "SELECT p.id AS playerId,p.name AS jogador, p.gols as gols, p.number AS number, p.position as position, t.name AS time, situation FROM playerPlay pp JOIN player p ON pp.playerId = p.id JOIN team t ON pp.teamId = t.id WHERE pp.matchId = ? AND pp.situation = ?";
     public DAO() {
 
     }
@@ -343,7 +343,7 @@ public class DAO {
                 insertStatement.setInt(1, playerId);
                 insertStatement.setInt(2, team1Id);
                 insertStatement.setInt(3, matchId);
-                insertStatement.setString(4,"Em casa");
+                insertStatement.setString(4,"casa");
                 insertStatement.executeUpdate();
             }
 
@@ -373,6 +373,78 @@ public class DAO {
                 System.err.println("Erro ao fechar a conexão: " + e.getMessage());
             }
         }
+    }
+
+    public ArrayList<Players> listarPlayersEmCasa(int matchId) throws Exception {
+        Connection connection = Conexao.getInstancia().abrirConexao();
+        ArrayList<Players> playersListEmCasa = new ArrayList<>();
+        String query = playersGame;
+
+        try {
+            preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setInt(1, matchId); // Substitui o placeholder '?' pelo valor de matchId
+            preparedStatement.setString(2,"casa");
+            resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                Players player = new Players(resultSet.getInt("playerId"),
+                        resultSet.getString("jogador"),
+                        resultSet.getString("gols"),
+                        resultSet.getString("number"),
+                        resultSet.getString("position"));
+
+                playersListEmCasa.add(player);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            fecharConexao(connection);
+        }
+
+        if (playersListEmCasa.size() == 0) {
+            JOptionPane.showMessageDialog(null, "Não há jogadores em casa cadastrados.",
+                    "", JOptionPane.WARNING_MESSAGE);
+            throw new Exception("Não há jogadores em casa cadastrados!");
+        }
+
+        return playersListEmCasa;
+    }
+
+    public ArrayList<Players> listarPlayersVisitantes(int matchId) throws Exception {
+        Connection connection = Conexao.getInstancia().abrirConexao();
+        ArrayList<Players> playersListVisitantes = new ArrayList<>();
+        String query = playersGame;
+
+        try {
+            preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setInt(1, matchId); // Substitui o placeholder '?' pelo valor de matchId
+            preparedStatement.setString(2,"visitante");
+            resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                Players player = new Players(resultSet.getInt("playerId"),
+                        resultSet.getString("jogador"),
+                        resultSet.getString("gols"),
+                        resultSet.getString("number"),
+                        resultSet.getString("position"));
+
+                playersListVisitantes.add(player);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            fecharConexao(connection);
+        }
+
+        if (playersListVisitantes.size() == 0) {
+            JOptionPane.showMessageDialog(null, "Não há jogadores visitantes cadastrados.",
+                    "", JOptionPane.WARNING_MESSAGE);
+            throw new Exception("Não há jogadores visitantes cadastrados!");
+        }
+
+        return playersListVisitantes;
     }
 
     public static void fecharConexao(Connection connection) {

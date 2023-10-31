@@ -1,9 +1,7 @@
 package view;
 
 import java.awt.EventQueue;
-import javax.swing.ImageIcon;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
+import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
 import controller.Criptografia;
@@ -11,11 +9,7 @@ import dao.DAO;
 import model.Players;
 import model.Team;
 
-import javax.swing.JLabel;
-import javax.swing.JTextField;
-import javax.swing.JButton;
 import java.awt.Font;
-import javax.swing.JPasswordField;
 import java.awt.Color;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -91,7 +85,9 @@ public class JLogin extends JFrame {
         btnLogin.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
 
-                // Criptografia criptografia = new Criptografia(password, Criptografia.MD5);
+            if(TeamName.getText().isBlank() || passwordField.getText().isBlank()){
+                JOptionPane.showMessageDialog(null, "Por favor, preencha todos os campos.", "Aviso", JOptionPane.WARNING_MESSAGE);
+            }else {
                 Criptografia criptografia = new Criptografia(passwordField.getText(), Criptografia.MD5);
 
                 Players player = new Players(0, TeamName.getText(), criptografia.criptografar(), null, null, null, null);
@@ -102,6 +98,7 @@ public class JLogin extends JFrame {
                     dispose();
                     FirstView.main(new String[0]);
                 }
+            }
             }
         });
 
