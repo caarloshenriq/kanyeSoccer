@@ -13,7 +13,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 
 public class PlayersSelect extends JFrame {
 
@@ -21,12 +20,10 @@ public class PlayersSelect extends JFrame {
     private JTable PrincipalTable;
     private JTable team1Table;
     private JTable team2Table;
-    private ArrayList<Players> players;
+    private ArrayList<Players> player;
     private ArrayList<Integer> selectedPlayerT1 = new ArrayList<>();
     private ArrayList<Integer> selectedPlayerT2 = new ArrayList<>();
-    List<Integer> team1 = new ArrayList<Integer>();
-    List<Integer> team2 = new ArrayList<Integer>();
-    private boolean autoSelect;
+    boolean autoSelect = false;
 
     public static void main(String[] args) {
         EventQueue.invokeLater(new Runnable() {
@@ -46,7 +43,7 @@ public class PlayersSelect extends JFrame {
 
     public PlayersSelect(String name1, String name2, int id1, int id2) throws Exception {
         DAO dao = new DAO();
-        players = dao.listarPlayers();
+        player = dao.listarPlayers();
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(100, 100, 930, 493);
         contentPane = new JPanel();
@@ -74,14 +71,14 @@ public class PlayersSelect extends JFrame {
             public void mouseClicked(MouseEvent e) {
                 if (e.getButton() == MouseEvent.BUTTON1) {
                     int selectedRow = PrincipalTable.getSelectedRow();
-                    Players selectedPlayer = players.get(selectedRow);
+                    Players selectedPlayer = player.get(selectedRow);
 
                 }
             }
         });
 
         DefaultTableModel principalModel = (DefaultTableModel) PrincipalTable.getModel();
-        for (Players jogador : players) {
+        for (Players jogador : player) {
             principalModel.addRow(new Object[]{jogador.getName(), jogador.getPosition()});
         }
 
@@ -133,10 +130,6 @@ public class PlayersSelect extends JFrame {
         team2Name.setBounds(736, 58, 87, 14);
         contentPane.add(team2Name);
 
-//        JCheckBox checkBox = new JCheckBox("Distribuição Automática");
-//        checkBox.setBounds(10, 407, 232, 23);
-//        contentPane.add(checkBox);
-
         JButton newGame = new JButton("Criar Partida");
         newGame.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -147,23 +140,27 @@ public class PlayersSelect extends JFrame {
                 }
             }
         });
-
+        newGame.setForeground(new Color(255, 255, 255));
+        newGame.setBackground(new Color(59, 130, 246));
         JButton team1Add = new JButton("<<");
         team1Add.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 int selectedRow = PrincipalTable.getSelectedRow();
-                System.out.println("Selected player: " + selectedRow);
                 if (selectedPlayerT1.size() > 9) {
                     JOptionPane.showMessageDialog(null, "Quantidade maxima de jogadores (10) excedida.");
-                } else if (selectedRow >= 0 && selectedRow < players.size()) {
-                    Players selectedPlayer = players.get(selectedRow);
-                    addPlayerToTable((DefaultTableModel) team1Table.getModel(), selectedPlayer, selectedPlayerT1);
+                } else if (selectedRow >= 0 && selectedRow < player.size()) {
+                    Players selectedPlayer = player.get(selectedRow);
                     principalTableModel.removeRow(selectedRow);
+                    team1TableModel.addRow(new Object[]{selectedPlayer.getName(), selectedPlayer.getPosition()});
+                    selectedPlayerT1.add(selectedPlayer.getId());
+                    System.out.println("playerId " + selectedPlayer.getId());
                 } else {
                     JOptionPane.showMessageDialog(null, "Selecione um jogador.");
                 }
             }
         });
+        team1Add.setForeground(new Color(255, 255, 255));
+        team1Add.setBackground(new Color(59, 130, 246));
         team1Add.setBounds(262, 153, 61, 23);
         contentPane.add(team1Add);
 
@@ -173,14 +170,18 @@ public class PlayersSelect extends JFrame {
                 int selectedRow = team1Table.getSelectedRow();
                 System.out.println(selectedRow);
                 if (selectedRow >= 0 && selectedRow < team1Table.getRowCount()) {
-                    Players removedPlayer = getPlayerFromTable((DefaultTableModel) team1Table.getModel(), selectedRow);
-                    principalModel.addRow(new Object[]{removedPlayer.getName(), removedPlayer.getPosition()});
-                    removePlayerFromTable((DefaultTableModel) team1Table.getModel(), selectedRow, team1);
+                    Players selectedPlayer = player.get(selectedRow);
+                    team1TableModel.removeRow(selectedRow);
+                    principalTableModel.addRow(new Object[]{selectedPlayer.getName(), selectedPlayer.getPosition()});
+                    selectedPlayerT1.remove(selectedRow);
+                    System.out.println(selectedPlayerT1);
                 } else {
                     JOptionPane.showMessageDialog(null, "Selecione um jogador.");
                 }
             }
         });
+        team1Remove.setForeground(new Color(255, 255, 255));
+        team1Remove.setBackground(new Color(255, 0, 0));
         team1Remove.setBounds(260, 237, 61, 23);
         contentPane.add(team1Remove);
 
@@ -190,15 +191,19 @@ public class PlayersSelect extends JFrame {
                 int selectedRow = team2Table.getSelectedRow();
                 //System.out.println(selectedRow);
                 if (selectedRow >= 0 && selectedRow < team2Table.getRowCount()) {
-                    Players removedPlayer = getPlayerFromTable((DefaultTableModel) team2Table.getModel(), selectedRow);
-                    assert removedPlayer != null;
-                    principalModel.addRow(new Object[]{removedPlayer.getName(), removedPlayer.getPosition()});
-                    removePlayerFromTable((DefaultTableModel) team2Table.getModel(), selectedRow, selectedPlayerT2);
+                    Players selectedPlayer = player.get(selectedRow);
+                    team2TableModel.removeRow(selectedRow);
+                    principalTableModel.addRow(new Object[]{selectedPlayer.getName(), selectedPlayer.getPosition()});
+                    selectedPlayerT2.remove(selectedRow);
+
+                    System.out.println(selectedPlayerT2);
                 } else {
                     JOptionPane.showMessageDialog(null, "Selecione um jogador.");
                 }
             }
         });
+        team2Remove.setForeground(new Color(255, 255, 255));
+        team2Remove.setBackground(new Color(255, 0, 0));
         team2Remove.setBounds(604, 237, 61, 23);
         contentPane.add(team2Remove);
 
@@ -206,30 +211,55 @@ public class PlayersSelect extends JFrame {
         Team2Add.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 int selectedRow = PrincipalTable.getSelectedRow();
-                System.out.println(selectedRow);
                 if (selectedPlayerT2.size() > 9) {
                     JOptionPane.showMessageDialog(null, "Quantidade maxima de jogadores (10) excedida.");
                     System.out.println(selectedPlayerT2.size());
-                } else if (selectedRow >= 0 && selectedRow < players.size()) {
-                    Players selectedPlayer = players.get(selectedRow);
-                    addPlayerToTable((DefaultTableModel) team2Table.getModel(), selectedPlayer, selectedPlayerT2);
+                } else if (selectedRow >= 0 && selectedRow < player.size()) {
+                    Players selectedPlayer = player.get(selectedRow);
                     principalTableModel.removeRow(selectedRow);
+                    team2TableModel.addRow(new Object[]{selectedPlayer.getName(), selectedPlayer.getPosition()});
+                    selectedPlayerT2.add(selectedPlayer.getId());
+                    System.out.println("playerId " + selectedPlayer.getId());
                 } else {
                     JOptionPane.showMessageDialog(null, "Selecione um jogador.");
                 }
             }
         });
-
+        Team2Add.setForeground(new Color(255, 255, 255));
+        Team2Add.setBackground(new Color(59, 130, 246));
         JButton AuthAdd = new JButton("Add. Automaticamente");
         AuthAdd.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                int reply = JOptionPane.showConfirmDialog(null, "Ao escolher a distribibuição automatica você não poderá alterar as escalações dos times, Deseja continuar?", "Distruibuição automatica", JOptionPane.YES_NO_OPTION);
-                if (reply == JOptionPane.YES_OPTION) {
-                    System.out.println("yes");
+
+                 if (autoSelect) {
+                    JOptionPane.showMessageDialog(null, "A distribuição automática só pode ser utilizada uma vez.");
+                    return;
                 }
-                distributePlayersAutomatically(id1, id2);
-            }
+                    Collections.shuffle(player);
+
+                    for (int i = 0; i < 7; i++) {
+                        Players selectedPlayer = player.get(i);
+                        team1TableModel.addRow(new Object[]{selectedPlayer.getName(), selectedPlayer.getPosition()});
+                        selectedPlayerT1.add(selectedPlayer.getId());
+                    }
+                    for (int i = 7; i < 14; i++) {
+                        Players selectedPlayer = player.get(i);
+                        team2TableModel.addRow(new Object[]{selectedPlayer.getName(), selectedPlayer.getPosition()});
+                        selectedPlayerT2.add(selectedPlayer.getId());
+                    }
+                    DefaultTableModel principalModel = (DefaultTableModel) PrincipalTable.getModel();
+                    principalModel.setRowCount(0);
+
+                    for (int i = 14; i < player.size(); i++) {
+                        Players selectedPlayer = player.get(i);
+                        principalModel.addRow(new Object[]{selectedPlayer.getName(), selectedPlayer.getPosition()});
+                    }
+                autoSelect = !autoSelect;
+                }
+
         });
+        AuthAdd.setForeground(new Color(255, 255, 255));
+        AuthAdd.setBackground(new Color(59, 130, 246));
         AuthAdd.setBounds(10, 407, 175, 23);
         contentPane.add(AuthAdd);
 
@@ -238,98 +268,5 @@ public class PlayersSelect extends JFrame {
 
         newGame.setBounds(753, 407, 151, 23);
         contentPane.add(newGame);
-
-
-    }
-
-    // Método para adicionar um jogador a uma tabela específica
-    private void addPlayerToTable(DefaultTableModel tableModel, Players player, List team) {
-        tableModel.addRow(new Object[]{player.getName(), player.getPosition()});
-        team.add(player.getId());
-        team.clear();
-    }
-
-
-    // Método para remover um jogador de uma tabela específica
-    private void removePlayerFromTable(DefaultTableModel tableModel, int selectedRow, List team) {
-        if (selectedRow >= 0 && selectedRow < tableModel.getRowCount()) {
-            Players removedPlayer = getPlayerFromTable(tableModel, selectedRow);
-            if (removedPlayer != null) {
-                tableModel.removeRow(selectedRow);
-                for (int i = 0; i < tableModel.getRowCount(); i++) {
-                    int playerId = getPlayerIdByName((String) tableModel.getValueAt(i, 0));
-                    team.add(playerId);
-                }
-            }
-        } else {
-            JOptionPane.showMessageDialog(null, "Selecione um jogador.");
-        }
-    }
-
-    // Método para obter o ID de um jogador pelo nome
-    private int getPlayerIdByName(String playerName) {
-        for (Players player : players) {
-            if (player.getName().equals(playerName)) {
-                return player.getId();
-            }
-        }
-        return -1; // Se o jogador não for encontrado
-    }
-
-    // Método para obter um jogador de uma tabela específica
-    private Players getPlayerFromTable(DefaultTableModel tableModel, int selectedRow) {
-        if (selectedRow >= 0 && selectedRow < tableModel.getRowCount()) {
-            String playerName = (String) tableModel.getValueAt(selectedRow, 0);
-            for (Players player : players) {
-                if (player.getName().equals(playerName)) {
-                    return player;
-                }
-            }
-        }
-        return null;
-    }
-
-    private void distributePlayersAutomatically(int id1, int id2) {
-
-        if (players.size() < 14) {
-            JOptionPane.showMessageDialog(null, "Número insuficiente de jogadores para distribuição automática.");
-            return;
-        }
-
-        Collections.shuffle(players); // Embaralha a lista de jogadores
-
-        // Limpa as tabelas dos times
-        DefaultTableModel team1Model = (DefaultTableModel) team1Table.getModel();
-        team1Model.setRowCount(0);
-
-        DefaultTableModel team2Model = (DefaultTableModel) team2Table.getModel();
-        team2Model.setRowCount(0);
-
-//        selectedPlayerT1.clear();
-//        selectedPlayerT2.clear();
-
-        // Distribui 7 jogadores para cada time
-        for (int i = 0; i < 7; i++) {
-            Players selectedPlayer = players.get(i);
-            addPlayerToTable(team1Model, selectedPlayer, selectedPlayerT1);
-            team1.add(selectedPlayer.getId());
-            selectedPlayerT1.add(selectedPlayer.getId());
-        }
-
-        for (int i = 7; i < 14; i++) {
-            Players selectedPlayer = players.get(i);
-            addPlayerToTable(team2Model, selectedPlayer, selectedPlayerT2);
-            team2.add(selectedPlayer.getId());
-        }
-
-        players.subList(0, 14).clear();
-        //DAO.PlayersMatch(team1, team2, id1, id2);
-        // Atualize a tabela de jogadores principais
-        DefaultTableModel principalModel = (DefaultTableModel) PrincipalTable.getModel();
-        principalModel.setRowCount(0);
-
-        for (Players jogador : players) {
-            principalModel.addRow(new Object[]{jogador.getName(), jogador.getPosition()});
-        }
     }
 }

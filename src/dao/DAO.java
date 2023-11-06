@@ -1,6 +1,5 @@
 package dao;
 
-import java.awt.*;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -8,16 +7,12 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 
 import controller.Conexao;
 import model.Match;
 import model.Team;
-import view.FirstView;
-import view.JLogin;
 import model.Players;
-import view.JPrincipal;
 
 import static dao.BD.connection;
 
@@ -39,6 +34,8 @@ public class DAO {
     private static String CONSULT_PARTIDA = " SELECT p.id, t1.name AS time1, team1_goals AS gol1, team2_goals AS gol2, t2.name AS time2, dategame as data, finalizada FROM partidas p JOIN team t1 ON p.team1_id = t1.id JOIN team t2 ON p.team2_id = t2.id WHERE p.id = ? ";
     private static String getGames = "SELECT p.id, t1.name AS time1, team1_goals AS gol1, team2_goals AS gol2, t2.name AS time2, dategame as data, finalizada FROM partidas p JOIN team t1 ON p.team1_id = t1.id JOIN team t2 ON p.team2_id = t2.id;";
     private static String playersGame = "SELECT p.id AS playerId,p.name AS jogador, p.gols as gols, p.number AS number, p.position as position, t.name AS time, situation FROM playerPlay pp JOIN player p ON pp.playerId = p.id JOIN team t ON pp.teamId = t.id WHERE pp.matchId = ? AND pp.situation = ?";
+    private static String alterGoals = "UPDATE player set gols = gols + 1 WHERE id = ?";
+
     public DAO() {
 
     }
@@ -343,7 +340,7 @@ public class DAO {
                 insertStatement.setInt(1, playerId);
                 insertStatement.setInt(2, team1Id);
                 insertStatement.setInt(3, matchId);
-                insertStatement.setString(4,"casa");
+                insertStatement.setString(4, "casa");
                 insertStatement.executeUpdate();
             }
 
@@ -383,7 +380,7 @@ public class DAO {
         try {
             preparedStatement = connection.prepareStatement(query);
             preparedStatement.setInt(1, matchId); // Substitui o placeholder '?' pelo valor de matchId
-            preparedStatement.setString(2,"casa");
+            preparedStatement.setString(2, "casa");
             resultSet = preparedStatement.executeQuery();
 
             while (resultSet.next()) {
@@ -419,7 +416,7 @@ public class DAO {
         try {
             preparedStatement = connection.prepareStatement(query);
             preparedStatement.setInt(1, matchId); // Substitui o placeholder '?' pelo valor de matchId
-            preparedStatement.setString(2,"visitante");
+            preparedStatement.setString(2, "visitante");
             resultSet = preparedStatement.executeQuery();
 
             while (resultSet.next()) {
@@ -446,6 +443,38 @@ public class DAO {
 
         return playersListVisitantes;
     }
+
+    public static void UpdateGoals(List<Integer> players) throws SQLException {
+        Connection connection = Conexao.getInstancia().abrirConexao();
+        String q = alterGoals;
+        try {
+
+            for (Integer playerId : players) {
+                try (PreparedStatement insertStatement = connection.prepareStatement(q)) {
+                    insertStatement.setInt(1, playerId);
+                    insertStatement.executeUpdate();
+                }
+            }
+            connection.commit();
+            JOptionPane.showMessageDialog(null, "Partida alterada com sucesso");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void BestGoal(int idPlayer) {
+        Connection connection = Conexao.getInstancia().abrirConexao();
+        String q = "update player set bestGoal = bestGoal + 1 WHERE id = ?";
+        try {
+            try (PreparedStatement insertStatement = connection.prepareStatement(q)) {
+                insertStatement.setInt(1, idPlayer);
+                insertStatement.executeUpdate();
+            }
+            connection.commit();
+            JOptionPane.showMessageDialog(null, "Partida alterada com sucesso");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
     public static void fecharConexao(Connection connection) {
         try {

@@ -6,17 +6,13 @@ import model.Players;
 import java.awt.Color;
 import java.awt.EventQueue;
 
-import javax.swing.JFrame;
-import javax.swing.JPanel;
+import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import javax.swing.JLabel;
 import java.awt.Font;
-import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
@@ -29,7 +25,8 @@ public class SelectBestPlayers extends JFrame {
 
     private ArrayList<Players> Team1Players;
     private ArrayList<Players> Team2Players;
-    List<Integer> players = new ArrayList<Integer>();
+    private ArrayList<Integer> players = new ArrayList<>();
+    private static List<String> jogadores;
     /**
      * Launch the application.
      */
@@ -130,11 +127,16 @@ public class SelectBestPlayers extends JFrame {
         JButton newGame = new JButton("Eleger jogadores");
         newGame.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-
-                System.out.println("Clicado");
+                try {
+                    dao.UpdateGoals(players);
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
+                }
             }
         });
         newGame.setBounds(753, 407, 151, 23);
+        newGame.setForeground(new Color(255, 255, 255));
+        newGame.setBackground(new Color(59, 130, 246));
         contentPane.add(newGame);
 
 
@@ -144,7 +146,7 @@ public class SelectBestPlayers extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 int selectRow = team1Table.getSelectedRow();
                 if(selectRow < 0){
-                    System.out.println("Selecione um jogador");
+                    JOptionPane.showMessageDialog(null, "Selecione um jogador.");
                 }else {
                     Players selectedPlayer = Team1Players.get(selectRow);
                     PrincipalModel.addRow(new Object[]{selectedPlayer.getName(), selectedPlayer.getPosition()});
@@ -152,6 +154,8 @@ public class SelectBestPlayers extends JFrame {
                 }
             }
         });
+        team1Add.setForeground(new Color(255, 255, 255));
+        team1Add.setBackground(new Color(59, 130, 246));
         team1Add.setBounds(262, 198, 61, 23);
         contentPane.add(team1Add);
 
@@ -161,7 +165,7 @@ public class SelectBestPlayers extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 int selectRow = team2Table.getSelectedRow();
                 if(selectRow < 0){
-                    System.out.println("Selecione um jogador");
+                    JOptionPane.showMessageDialog(null, "Selecione um jogador.");
                 }else {
                     Players selectedPlayer = Team2Players.get(selectRow);
                     PrincipalModel.addRow(new Object[]{selectedPlayer.getName(), selectedPlayer.getPosition()});
@@ -171,14 +175,15 @@ public class SelectBestPlayers extends JFrame {
         });
         team2Add.setBounds(606, 198, 61, 23);
         contentPane.add(team2Add);
-
+        team2Add.setForeground(new Color(255, 255, 255));
+        team2Add.setBackground(new Color(59, 130, 246));
 
         JButton Remove = new JButton("Remover");
         Remove.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 int selectRow = PrincipalTalbe.getSelectedRow();
                 if(selectRow < 0){
-                    System.out.println("selecione um jogador");
+                    JOptionPane.showMessageDialog(null, "Selecione um jogador.");
                 } else{
                     PrincipalModel.removeRow(selectRow);
                     players.remove(selectRow);
@@ -189,6 +194,5 @@ public class SelectBestPlayers extends JFrame {
         Remove.setForeground(new Color(255, 255, 255));
         Remove.setBounds(331, 381, 260, 23);
         contentPane.add(Remove);
-
     }
 }
