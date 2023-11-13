@@ -153,7 +153,6 @@ public class PlayersSelect extends JFrame {
                     principalTableModel.removeRow(selectedRow);
                     team1TableModel.addRow(new Object[]{selectedPlayer.getName(), selectedPlayer.getPosition()});
                     selectedPlayerT1.add(selectedPlayer.getId());
-                    System.out.println("playerId " + selectedPlayer.getId());
                 } else {
                     JOptionPane.showMessageDialog(null, "Selecione um jogador.");
                 }

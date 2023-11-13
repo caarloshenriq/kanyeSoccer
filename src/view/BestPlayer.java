@@ -1,10 +1,11 @@
 package view;
 
-import model.Players;
+import dao.DAO;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -16,11 +17,11 @@ public class BestPlayer extends JFrame {
     /**
      * Launch the application.
      */
-    public static void main(String[] args) {
+    public static void main(ArrayList<String> args, ArrayList<String> playerName) {
         EventQueue.invokeLater(new Runnable() {
             public void run() {
                 try {
-                    BestPlayer frame = new BestPlayer();
+                    BestPlayer frame = new BestPlayer(args, playerName);
                     frame.setVisible(true);
                     frame.setResizable(false);
                     frame.setLocationRelativeTo(null);
@@ -34,35 +35,51 @@ public class BestPlayer extends JFrame {
     /**
      * Create the frame.
      */
-    public BestPlayer() {
+    public BestPlayer(ArrayList<String> players, ArrayList<String> playersName) {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setBounds(100, 100, 450, 204);
+        setBounds(100, 100, 450, 294);
         contentPane = new JPanel();
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
         setContentPane(contentPane);
         contentPane.setLayout(null);
 
-        JLabel BestPlayer = new JLabel("Selecione o melhor jogador");
+        JLabel BestPlayer = new JLabel("Selecione os melhores jogador");
         BestPlayer.setFont(new Font("Tahoma", Font.BOLD, 15));
-        BestPlayer.setBounds(113, 11, 249, 29);
+        BestPlayer.setBounds(98, 11, 249, 29);
         contentPane.add(BestPlayer);
 
-        Choice c = new Choice();
-        c.setBounds(113, 77, 203, 22);
+        JComboBox cboxPlayers = new JComboBox();
+        cboxPlayers.setBounds(113, 77, 203, 22);
+        contentPane.add(cboxPlayers);
+        for (String player : players) {
+            cboxPlayers.addItem(player);
+        }
+        JLabel lblNewLabel = new JLabel("Quem fez o gol mais bonito:");
+        lblNewLabel.setBounds(113, 63, 191, 14);
+        contentPane.add(lblNewLabel);
 
+        JLabel lblMelhorJogadorDa = new JLabel("Melhor jogador da partida:");
+        lblMelhorJogadorDa.setBounds(113, 110, 191, 14);
+        contentPane.add(lblMelhorJogadorDa);
 
-        contentPane.add(c);
+        JComboBox bestPlayer = new JComboBox();
+        bestPlayer.setBounds(113, 124, 203, 22);
+        contentPane.add(bestPlayer);
+        System.out.println(playersName);
+        for (String player : playersName) {
+            bestPlayer.addItem(player);
+        }
 
-
-
-        JButton btn = new JButton("Pronto!");
-        btn.setBounds(165, 133, 89, 23);
-        contentPane.add(btn);
+        JButton btn = new JButton("Pronto");
         btn.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                c.getItem(c.getSelectedIndex());
+                DAO.BestGoal((String) cboxPlayers.getSelectedItem(), (String) bestPlayer.getSelectedItem());
             }
         });
+        btn.setBounds(168, 200, 89, 23);
+        contentPane.add(btn);
+
+
     }
 }

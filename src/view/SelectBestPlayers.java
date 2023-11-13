@@ -11,7 +11,6 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.List;
 import java.awt.Font;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -26,15 +25,16 @@ public class SelectBestPlayers extends JFrame {
     private ArrayList<Players> Team1Players;
     private ArrayList<Players> Team2Players;
     private ArrayList<Integer> players = new ArrayList<>();
-    private static List<String> jogadores;
+    private static ArrayList<String> jogadores = new ArrayList<>();
+    private static ArrayList<String> playerName = new ArrayList<>();
     /**
      * Launch the application.
      */
-    public static void main(String[] args) {
+    public static void main(int args) {
         EventQueue.invokeLater(new Runnable() {
             public void run() {
                 try {
-                    SelectBestPlayers frame = new SelectBestPlayers();
+                    SelectBestPlayers frame = new SelectBestPlayers(args);
                     frame.setVisible(true);
                     frame.setResizable(false);
                     frame.setLocationRelativeTo(null);
@@ -48,10 +48,10 @@ public class SelectBestPlayers extends JFrame {
     /**
      * Create the frame.
      */
-    public SelectBestPlayers() throws Exception {
+    public SelectBestPlayers(int idMatch) throws Exception {
         DAO dao = new DAO();
-        Team1Players = dao.listarPlayersEmCasa(1);
-        Team2Players = dao.listarPlayersVisitantes(1);
+        Team1Players = dao.listarPlayersEmCasa(idMatch);
+        Team2Players = dao.listarPlayersVisitantes(idMatch);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(100, 100, 930, 493);
         contentPane = new JPanel();
@@ -123,12 +123,20 @@ public class SelectBestPlayers extends JFrame {
         team2Name.setBounds(736, 58, 87, 14);
         contentPane.add(team2Name);
 
+        for (Players jogador : Team2Players) {
+            playerName.add(jogador.getName());
+        }
+        for (Players jogador : Team1Players) {
+            playerName.add(jogador.getName());
+        }
 
         JButton newGame = new JButton("Eleger jogadores");
         newGame.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 try {
                     dao.UpdateGoals(players);
+                    dispose();
+                   BestPlayer.main(jogadores, playerName);
                 } catch (SQLException ex) {
                     throw new RuntimeException(ex);
                 }
@@ -151,6 +159,8 @@ public class SelectBestPlayers extends JFrame {
                     Players selectedPlayer = Team1Players.get(selectRow);
                     PrincipalModel.addRow(new Object[]{selectedPlayer.getName(), selectedPlayer.getPosition()});
                     players.add(selectedPlayer.getId());
+                    jogadores.add(selectedPlayer.getName());
+                    System.out.println(jogadores);
                 }
             }
         });
@@ -170,6 +180,8 @@ public class SelectBestPlayers extends JFrame {
                     Players selectedPlayer = Team2Players.get(selectRow);
                     PrincipalModel.addRow(new Object[]{selectedPlayer.getName(), selectedPlayer.getPosition()});
                     players.add(selectedPlayer.getId());
+                    jogadores.add(selectedPlayer.getName());
+                    System.out.println(jogadores);
                 }
             }
         });
@@ -187,6 +199,7 @@ public class SelectBestPlayers extends JFrame {
                 } else{
                     PrincipalModel.removeRow(selectRow);
                     players.remove(selectRow);
+                    jogadores.remove(selectRow);
                 }
             }
         });

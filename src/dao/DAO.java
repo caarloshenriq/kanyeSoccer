@@ -462,21 +462,29 @@ public class DAO {
         }
     }
 
-    public static void BestGoal(int idPlayer) {
+    public static void BestGoal(String playerName, String BestPlayer) {
         Connection connection = Conexao.getInstancia().abrirConexao();
-        String q = "update player set bestGoal = bestGoal + 1 WHERE id = ?";
+        String q = "update player set bestgoal = bestgoal + 1 WHERE name = ?";
         try {
             try (PreparedStatement insertStatement = connection.prepareStatement(q)) {
-                insertStatement.setInt(1, idPlayer);
+                insertStatement.setString(1, playerName);
                 insertStatement.executeUpdate();
             }
             connection.commit();
-            JOptionPane.showMessageDialog(null, "Partida alterada com sucesso");
+            String query = "update player set bestPlayer = bestPlayer + 1 WHERE name = ?";
+            try (PreparedStatement insertStatement = connection.prepareStatement(query)) {
+                insertStatement.setString(1, BestPlayer);
+                insertStatement.executeUpdate();
+            }
+            connection.commit();
+
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
 
-    public static void fecharConexao(Connection connection) {
+
+        public static void fecharConexao(Connection connection) {
         try {
             if (connection != null && !connection.isClosed()) {
                 connection.close();
