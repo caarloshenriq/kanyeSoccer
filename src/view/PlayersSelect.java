@@ -137,6 +137,8 @@ public class PlayersSelect extends JFrame {
                     JOptionPane.showMessageDialog(null, "Insrira pelo menos 7 jogadores em cada time.");
                 } else {
                     DAO.PlayersMatch(selectedPlayerT1, selectedPlayerT2, id1, id2);
+                    dispose();
+                    FirstView.main(new String[0]);
                 }
             }
         });
@@ -194,8 +196,6 @@ public class PlayersSelect extends JFrame {
                     team2TableModel.removeRow(selectedRow);
                     principalTableModel.addRow(new Object[]{selectedPlayer.getName(), selectedPlayer.getPosition()});
                     selectedPlayerT2.remove(selectedRow);
-
-                    System.out.println(selectedPlayerT2);
                 } else {
                     JOptionPane.showMessageDialog(null, "Selecione um jogador.");
                 }
@@ -218,7 +218,6 @@ public class PlayersSelect extends JFrame {
                     principalTableModel.removeRow(selectedRow);
                     team2TableModel.addRow(new Object[]{selectedPlayer.getName(), selectedPlayer.getPosition()});
                     selectedPlayerT2.add(selectedPlayer.getId());
-                    System.out.println("playerId " + selectedPlayer.getId());
                 } else {
                     JOptionPane.showMessageDialog(null, "Selecione um jogador.");
                 }

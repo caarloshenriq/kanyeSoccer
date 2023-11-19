@@ -30,11 +30,11 @@ public class SelectBestPlayers extends JFrame {
     /**
      * Launch the application.
      */
-    public static void main(int args) {
+    public static void main(int args, String team1, String team2) {
         EventQueue.invokeLater(new Runnable() {
             public void run() {
                 try {
-                    SelectBestPlayers frame = new SelectBestPlayers(args);
+                    SelectBestPlayers frame = new SelectBestPlayers(args, team1, team2);
                     frame.setVisible(true);
                     frame.setResizable(false);
                     frame.setLocationRelativeTo(null);
@@ -48,7 +48,7 @@ public class SelectBestPlayers extends JFrame {
     /**
      * Create the frame.
      */
-    public SelectBestPlayers(int idMatch) throws Exception {
+    public SelectBestPlayers(int idMatch, String team1, String team2) throws Exception {
         DAO dao = new DAO();
         Team1Players = dao.listarPlayersEmCasa(idMatch);
         Team2Players = dao.listarPlayersVisitantes(idMatch);
@@ -97,7 +97,10 @@ public class SelectBestPlayers extends JFrame {
         JScrollPane team2Pane = new JScrollPane();
         team2Pane.setBounds(677, 83, 227, 287);
         contentPane.add(team2Pane);
-
+        JLabel Team1Name = new JLabel(team1);
+        Team1Name.setFont(new Font("Tahoma", Font.BOLD, 14));
+        Team1Name.setBounds(83, 58, 87, 14);
+        contentPane.add(Team1Name);
         team2Table = new JTable();
         team2Table.setModel(new DefaultTableModel(
                 new Object[][] {
@@ -112,13 +115,13 @@ public class SelectBestPlayers extends JFrame {
             team2Model.addRow(new Object[]{jogador.getName(), jogador.getPosition()});
         }
 
-        JLabel PrincipalPlayer = new JLabel("JOGADORES");
+        JLabel PrincipalPlayer = new JLabel("GOLEADORES");
         PrincipalPlayer.setFont(new Font("Tahoma", Font.BOLD, 14));
         PrincipalPlayer.setLabelFor(PrincipalPane);
         PrincipalPlayer.setBounds(424, 59, 87, 14);
         contentPane.add(PrincipalPlayer);
 
-        JLabel team2Name = new JLabel("JOGADORES");
+        JLabel team2Name = new JLabel(team2);
         team2Name.setFont(new Font("Tahoma", Font.BOLD, 14));
         team2Name.setBounds(736, 58, 87, 14);
         contentPane.add(team2Name);

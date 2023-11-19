@@ -22,19 +22,20 @@ public class DAO {
     public static ResultSet resultSet = null;
     private static int idDoTime;
 
-    private static String CHECK_TEAM_EXISTENCE = "SELECT COUNT(*) FROM player WHERE name = ?";
-    private static String LOGIN = "SELECT * FROM player WHERE name = ? AND password = ?";
+    private static final String CHECK_TEAM_EXISTENCE = "SELECT COUNT(*) FROM player WHERE name = ?";
+    private static final String CHECK_NUMBER_EXIST = "SELECT COUNT(*) FROM player WHERE number = ?";
+    private static final String LOGIN = "SELECT * FROM player WHERE name = ? AND password = ?";
 
-    private static String CREATE_PLAYER = "INSERT INTO player (name, password, number, position) VALUES (?,?,?,?);";
+    private static final String CREATE_PLAYER = "INSERT INTO player (name, password, number, position) VALUES (?,?,?,?);";
 
-    private static String LIST_PLAYER = "SELECT id,name,gols,number,position FROM player ORDER BY gols DESC";
-    private static String RANKING_TEAMS = "SELECT name, vitorias, tecnico FROM team ORDER BY vitorias DESC;";
-    private static String CREATE_GAME = "INSERT INTO partidas (team1_id, team2_id, dategame) VALUES (?,?,?)";
+    private static final String LIST_PLAYER = "SELECT id,name,gols,number,position FROM player ORDER BY gols DESC";
+    private static final String RANKING_TEAMS = "SELECT name, vitorias, tecnico FROM team ORDER BY vitorias DESC;";
+    private static final String CREATE_GAME = "INSERT INTO partidas (team1_id, team2_id, dategame) VALUES (?,?,?)";
 
-    private static String CONSULT_PARTIDA = " SELECT p.id, t1.name AS time1, team1_goals AS gol1, team2_goals AS gol2, t2.name AS time2, dategame as data, finalizada FROM partidas p JOIN team t1 ON p.team1_id = t1.id JOIN team t2 ON p.team2_id = t2.id WHERE p.id = ? ";
-    private static String getGames = "SELECT p.id, t1.name AS time1, team1_goals AS gol1, team2_goals AS gol2, t2.name AS time2, dategame as data, finalizada FROM partidas p JOIN team t1 ON p.team1_id = t1.id JOIN team t2 ON p.team2_id = t2.id;";
-    private static String playersGame = "SELECT p.id AS playerId,p.name AS jogador, p.gols as gols, p.number AS number, p.position as position, t.name AS time, situation FROM playerPlay pp JOIN player p ON pp.playerId = p.id JOIN team t ON pp.teamId = t.id WHERE pp.matchId = ? AND pp.situation = ?";
-    private static String alterGoals = "UPDATE player set gols = gols + 1 WHERE id = ?";
+    private static final String CONSULT_PARTIDA = " SELECT p.id, t1.name AS time1, team1_goals AS gol1, team2_goals AS gol2, t2.name AS time2, dategame as data, finalizada FROM partidas p JOIN team t1 ON p.team1_id = t1.id JOIN team t2 ON p.team2_id = t2.id WHERE p.id = ? ";
+    private static final String getGames = "SELECT p.id, t1.name AS time1, team1_goals AS gol1, team2_goals AS gol2, t2.name AS time2, dategame as data, finalizada FROM partidas p JOIN team t1 ON p.team1_id = t1.id JOIN team t2 ON p.team2_id = t2.id;";
+    private static final String playersGame = "SELECT p.id AS playerId,p.name AS jogador, p.gols as gols, p.number AS number, p.position as position, t.name AS time, situation FROM playerPlay pp JOIN player p ON pp.playerId = p.id JOIN team t ON pp.teamId = t.id WHERE pp.matchId = ? AND pp.situation = ?";
+    private static final String alterGoals = "UPDATE player set gols = gols + 1 WHERE id = ?";
 
     public DAO() {
 
@@ -76,7 +77,9 @@ public class DAO {
     public boolean cadastrarJogador(Players player) {
         try (Connection connection = Conexao.getInstancia().abrirConexao()) {
             String queryCheckExistence = CHECK_TEAM_EXISTENCE;
+            String queryCheckNumber = CHECK_NUMBER_EXIST;
             String query = CREATE_PLAYER;
+            int playerNumber = Integer.parseInt(player.getNumber());
 
             try {
                 PreparedStatement checkExistenceStatement = connection.prepareStatement(queryCheckExistence);
@@ -89,6 +92,18 @@ public class DAO {
                         return false;
                     }
                 }
+
+                PreparedStatement checkNumberStatement = connection.prepareStatement(queryCheckNumber);
+                checkNumberStatement.setInt(1, playerNumber);
+                ResultSet resultSet1 = checkNumberStatement.executeQuery();
+                if (resultSet1.next()) {
+                    int count = resultSet1.getInt(1);
+                    if (count > 0) {
+                        JOptionPane.showMessageDialog(null, "Numero da camiseta já está em uso. Tente outro!!");
+                        return false;
+                    }
+                }
+
                 PreparedStatement createPlayerStatement = connection.prepareStatement(query);
                 int i = 1;
                 createPlayerStatement.setString(i++, player.getName());
@@ -484,7 +499,7 @@ public class DAO {
     }
 
 
-        public static void fecharConexao(Connection connection) {
+    public static void fecharConexao(Connection connection) {
         try {
             if (connection != null && !connection.isClosed()) {
                 connection.close();

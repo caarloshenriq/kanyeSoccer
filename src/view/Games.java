@@ -101,6 +101,7 @@ public class Games extends JFrame {
                         if (status) {
                             JOptionPane.showMessageDialog(Games.this, "Essa partida ja esta encerrada.", "Aviso", JOptionPane.WARNING_MESSAGE);
                         } else {
+                            dispose();
                             MatchModal matchModal = new MatchModal(team1, team2, gol1, gol2, id, date);
                             matchModal.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
                             matchModal.setLocationRelativeTo(matchModal);
