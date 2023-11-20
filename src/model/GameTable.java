@@ -10,7 +10,7 @@ public class GameTable extends AbstractTableModel {
     private static final long serialVersionUID = 1L;
 
     private static final String[] colunas = {
-            "ID", "TIME 1", "GOLS", " X", "GOLS", "TIME 2", "DATA"
+            "ID", "TIME 1", "GOLS", " X", "GOLS", "TIME 2", "DATA", "STATUS"
     };
 
     public static ArrayList<Match> match;
@@ -55,8 +55,9 @@ public class GameTable extends AbstractTableModel {
             return game.getTeam2();
         } else if(columnIndex == 6) {
             return game.getDateGame();
+        } else if(columnIndex == 7){
+            return game.getStatus() ? "Finalizada" : "Acontecerá";
         }
-
         else {
             return null;
         }

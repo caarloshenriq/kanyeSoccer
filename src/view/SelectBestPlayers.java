@@ -126,12 +126,6 @@ public class SelectBestPlayers extends JFrame {
         team2Name.setBounds(736, 58, 87, 14);
         contentPane.add(team2Name);
 
-        for (Players jogador : Team2Players) {
-            playerName.add(jogador.getName());
-        }
-        for (Players jogador : Team1Players) {
-            playerName.add(jogador.getName());
-        }
 
         JButton newGame = new JButton("Eleger jogadores");
         newGame.addActionListener(new ActionListener() {
@@ -139,7 +133,7 @@ public class SelectBestPlayers extends JFrame {
                 try {
                     dao.UpdateGoals(players);
                     dispose();
-                   BestPlayer.main(jogadores, playerName);
+                   BestPlayer.main(jogadores, idMatch);
                 } catch (SQLException ex) {
                     throw new RuntimeException(ex);
                 }

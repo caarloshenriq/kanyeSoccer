@@ -225,41 +225,41 @@ public class PlayersSelect extends JFrame {
         });
         Team2Add.setForeground(new Color(255, 255, 255));
         Team2Add.setBackground(new Color(59, 130, 246));
-        JButton AuthAdd = new JButton("Add. Automaticamente");
-        AuthAdd.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-
-                 if (autoSelect) {
-                    JOptionPane.showMessageDialog(null, "A distribuição automática só pode ser utilizada uma vez.");
-                    return;
-                }
-                    Collections.shuffle(player);
-
-                    for (int i = 0; i < 7; i++) {
-                        Players selectedPlayer = player.get(i);
-                        team1TableModel.addRow(new Object[]{selectedPlayer.getName(), selectedPlayer.getPosition()});
-                        selectedPlayerT1.add(selectedPlayer.getId());
-                    }
-                    for (int i = 7; i < 14; i++) {
-                        Players selectedPlayer = player.get(i);
-                        team2TableModel.addRow(new Object[]{selectedPlayer.getName(), selectedPlayer.getPosition()});
-                        selectedPlayerT2.add(selectedPlayer.getId());
-                    }
-                    DefaultTableModel principalModel = (DefaultTableModel) PrincipalTable.getModel();
-                    principalModel.setRowCount(0);
-
-                    for (int i = 14; i < player.size(); i++) {
-                        Players selectedPlayer = player.get(i);
-                        principalModel.addRow(new Object[]{selectedPlayer.getName(), selectedPlayer.getPosition()});
-                    }
-                autoSelect = !autoSelect;
-                }
-
-        });
-        AuthAdd.setForeground(new Color(255, 255, 255));
-        AuthAdd.setBackground(new Color(59, 130, 246));
-        AuthAdd.setBounds(10, 407, 175, 23);
-        contentPane.add(AuthAdd);
+//        JButton AuthAdd = new JButton("Add. Automaticamente");
+//        AuthAdd.addActionListener(new ActionListener() {
+//            public void actionPerformed(ActionEvent e) {
+//
+//                 if (autoSelect) {
+//                    JOptionPane.showMessageDialog(null, "A distribuição automática só pode ser utilizada uma vez.");
+//                    return;
+//                }
+//                    Collections.shuffle(player);
+//
+//                    for (int i = 0; i < 7; i++) {
+//                        Players selectedPlayer = player.get(i);
+//                        team1TableModel.addRow(new Object[]{selectedPlayer.getName(), selectedPlayer.getPosition()});
+//                        selectedPlayerT1.add(selectedPlayer.getId());
+//                    }
+//                    for (int i = 7; i < 14; i++) {
+//                        Players selectedPlayer = player.get(i);
+//                        team2TableModel.addRow(new Object[]{selectedPlayer.getName(), selectedPlayer.getPosition()});
+//                        selectedPlayerT2.add(selectedPlayer.getId());
+//                    }
+//                    DefaultTableModel principalModel = (DefaultTableModel) PrincipalTable.getModel();
+//                    principalModel.setRowCount(0);
+//
+//                    for (int i = 14; i < player.size(); i++) {
+//                        Players selectedPlayer = player.get(i);
+//                        principalModel.addRow(new Object[]{selectedPlayer.getName(), selectedPlayer.getPosition()});
+//                    }
+//                autoSelect = !autoSelect;
+//                }
+//
+//        });
+//        AuthAdd.setForeground(new Color(255, 255, 255));
+//        AuthAdd.setBackground(new Color(59, 130, 246));
+//        AuthAdd.setBounds(10, 407, 175, 23);
+//        contentPane.add(AuthAdd);
 
         Team2Add.setBounds(606, 153, 61, 23);
         contentPane.add(Team2Add);

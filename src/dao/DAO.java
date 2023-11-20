@@ -35,6 +35,7 @@ public class DAO {
     private static final String CONSULT_PARTIDA = " SELECT p.id, t1.name AS time1, team1_goals AS gol1, team2_goals AS gol2, t2.name AS time2, dategame as data, finalizada FROM partidas p JOIN team t1 ON p.team1_id = t1.id JOIN team t2 ON p.team2_id = t2.id WHERE p.id = ? ";
     private static final String getGames = "SELECT p.id, t1.name AS time1, team1_goals AS gol1, team2_goals AS gol2, t2.name AS time2, dategame as data, finalizada FROM partidas p JOIN team t1 ON p.team1_id = t1.id JOIN team t2 ON p.team2_id = t2.id;";
     private static final String playersGame = "SELECT p.id AS playerId,p.name AS jogador, p.gols as gols, p.number AS number, p.position as position, t.name AS time, situation FROM playerPlay pp JOIN player p ON pp.playerId = p.id JOIN team t ON pp.teamId = t.id WHERE pp.matchId = ? AND pp.situation = ?";
+    private static final String getPlayersByMatch = "SELECT p.id AS playerId,p.name AS jogador, p.gols as gols, p.number AS number, p.position as position, t.name AS time, situation FROM playerPlay pp JOIN player p ON pp.playerId = p.id JOIN team t ON pp.teamId = t.id WHERE pp.matchId = ?";
     private static final String alterGoals = "UPDATE player set gols = gols + 1 WHERE id = ?";
 
     public DAO() {
@@ -233,8 +234,6 @@ public class DAO {
                         resultSet.getInt("gol2"),
                         resultSet.getString("data"),
                         resultSet.getBoolean("finalizada"));
-
-
                 matchList.add(match); // Adicione o jogador à lista
             }
 
@@ -322,7 +321,7 @@ public class DAO {
                 preparedStatement.setInt(l, winner);
                 preparedStatement.execute();
                 connection.commit();
-                JOptionPane.showMessageDialog(null, "Partida alterada com sucesso");
+                //JOptionPane.showMessageDialog(null, "Partida alterada com sucesso");
             }
 
 
@@ -369,7 +368,7 @@ public class DAO {
             }
 
             connection.commit();
-            JOptionPane.showMessageDialog(null, "Partida alterada com sucesso");
+            //JOptionPane.showMessageDialog(null, "Partida alterada com sucesso");
 
         } catch (SQLException e) {
             try {
@@ -498,6 +497,40 @@ public class DAO {
         }
     }
 
+    public ArrayList<Players> GetPlayersByMatch(int matchId) throws Exception {
+        Connection connection = Conexao.getInstancia().abrirConexao();
+        ArrayList<Players> playersListVisitantes = new ArrayList<>();
+        String query = getPlayersByMatch;
+
+        try {
+            preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setInt(1, matchId); // Substitui o placeholder '?' pelo valor de matchId
+            resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                Players player = new Players(resultSet.getInt("playerId"),
+                        resultSet.getString("jogador"),
+                        resultSet.getString("gols"),
+                        resultSet.getString("number"),
+                        resultSet.getString("position"));
+
+                playersListVisitantes.add(player);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            fecharConexao(connection);
+        }
+
+        if (playersListVisitantes.size() == 0) {
+            JOptionPane.showMessageDialog(null, "Não há jogadores visitantes cadastrados.",
+                    "", JOptionPane.WARNING_MESSAGE);
+            throw new Exception("Não há jogadores visitantes cadastrados!");
+        }
+
+        return playersListVisitantes;
+    }
 
     public static void fecharConexao(Connection connection) {
         try {

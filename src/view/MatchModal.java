@@ -123,7 +123,13 @@ public class MatchModal extends JFrame {
 
                     DAO.updateMatch(id, gols1, gols2, team1id, team2id);
                     dispose();
-                    SelectBestPlayers.main(id, team1, team2);
+                    if(gols1 == 0 && gols2 == 0){
+                        JOptionPane.showMessageDialog(null, "Selecione o melhor jogador da partida");
+                        BestPlayer.main(null, id);
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Selecione os Jogadores que marcaram gol nessa partida");
+                        SelectBestPlayers.main(id, team1, team2);
+                    }
                 } else {
                     JOptionPane.showMessageDialog(MatchModal.this, "A partida nao pode ser alterada pois ela nao ocorrerá hoje.", "Aviso", JOptionPane.WARNING_MESSAGE);
                     dispose();
