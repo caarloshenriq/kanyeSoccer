@@ -56,7 +56,7 @@ public class GameTable extends AbstractTableModel {
         } else if(columnIndex == 6) {
             return game.getDateGame();
         } else if(columnIndex == 7){
-            return game.getStatus() ? "Finalizada" : "Acontecerá";
+            return game.getStatus() ? "Finalizada" : "Em aberto";
         }
         else {
             return null;

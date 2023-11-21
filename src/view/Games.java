@@ -88,27 +88,30 @@ public class Games extends JFrame {
             @Override
             public void mouseClicked(MouseEvent e) {
                 if (e.getButton() == 1) {
-                    try {
-                        Match matchSelected = dao.consultarPartida(GameTable.getValueAt(game.getSelectedRow(), 0).toString());
-                        String team1 = matchSelected.getTeam1();
-                        String team2 = matchSelected.getTeam2();
-                        int gol1 = matchSelected.getGols1();
-                        int gol2 = matchSelected.getGols2();
-                        int id = matchSelected.getId();
-                        String date = matchSelected.getDateGame();
-                        boolean status = matchSelected.getStatus();
+                    if(e.getClickCount() == 2) {
+                        try {
+                            Match matchSelected = dao.consultarPartida(GameTable.getValueAt(game.getSelectedRow(), 0).toString());
+                            String team1 = matchSelected.getTeam1();
+                            String team2 = matchSelected.getTeam2();
+                            int gol1 = matchSelected.getGols1();
+                            int gol2 = matchSelected.getGols2();
+                            int id = matchSelected.getId();
+                            String date = matchSelected.getDateGame();
+                            boolean status = matchSelected.getStatus();
 
-                        if (status) {
-                            JOptionPane.showMessageDialog(Games.this, "Essa partida ja esta encerrada.", "Aviso", JOptionPane.WARNING_MESSAGE);
-                        } else {
-                            dispose();
-                            MatchModal matchModal = new MatchModal(team1, team2, gol1, gol2, id, date);
-                            matchModal.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-                            matchModal.setLocationRelativeTo(matchModal);
-                            matchModal.setVisible(true);
+                            if (status) {
+                                JOptionPane.showMessageDialog(Games.this, "Essa partida ja esta encerrada.", "Aviso", JOptionPane.WARNING_MESSAGE);
+                            } else {
+                                dispose();
+                                MatchModal matchModal = new MatchModal(team1, team2, gol1, gol2, id, date);
+                                matchModal.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+                                matchModal.setLocationRelativeTo(matchModal);
+                                matchModal.setVisible(true);
+                            }
+
+                        } catch (Exception e1) {
+                            e1.printStackTrace();
                         }
-                    } catch (Exception e1) {
-                        e1.printStackTrace();
                     }
                 }
             }
