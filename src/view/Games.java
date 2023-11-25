@@ -39,7 +39,7 @@ public class Games extends JFrame {
                 try {
                     Games frame = new Games();
                     frame.setVisible(true);
-                    frame.setTitle("Ye Soccer");
+                    frame.setTitle("Ye Soccer - Partidas");
                     ImageIcon image = new ImageIcon("ye-face.png");
                     frame.setResizable(false);
                     frame.setIconImage(image.getImage());
@@ -102,11 +102,7 @@ public class Games extends JFrame {
                             if (status) {
                                 JOptionPane.showMessageDialog(Games.this, "Essa partida ja esta encerrada.", "Aviso", JOptionPane.WARNING_MESSAGE);
                             } else {
-                                dispose();
-                                MatchModal matchModal = new MatchModal(team1, team2, gol1, gol2, id, date);
-                                matchModal.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-                                matchModal.setLocationRelativeTo(matchModal);
-                                matchModal.setVisible(true);
+                                MatchModal.main(team1, team2, gol1, gol2, id, date);
                             }
 
                         } catch (Exception e1) {
@@ -118,6 +114,7 @@ public class Games extends JFrame {
         });
         game.setModel(GameTable);
         gamePanel.setViewportView(game);
+        game.setToolTipText("Clique 2 vezes em cima de uma partida para edita-la");
 
 
         JButton backButton = new JButton("Voltar");

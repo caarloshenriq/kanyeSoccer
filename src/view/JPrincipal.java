@@ -118,7 +118,7 @@ public class JPrincipal extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				dispose();
 				FirstView.main(new String[0]);
-			}
+            }
 		});
 		backButton.setBounds(10, 11, 89, 23);
 		backButton.setForeground(new Color(255, 255, 255));

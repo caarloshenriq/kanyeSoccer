@@ -136,6 +136,7 @@ public class CreateTeam extends JFrame {
                         FirstView.main(new String[0]);
                     }
                 }
+
             }
         });
         button.setForeground(new Color(255, 255, 255));

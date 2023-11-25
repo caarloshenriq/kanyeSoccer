@@ -137,6 +137,7 @@ public class SelectBestPlayers extends JFrame {
                 } catch (SQLException ex) {
                     throw new RuntimeException(ex);
                 }
+
             }
         });
         newGame.setBounds(753, 407, 151, 23);
@@ -159,6 +160,7 @@ public class SelectBestPlayers extends JFrame {
                     jogadores.add(selectedPlayer.getName());
                     System.out.println(jogadores);
                 }
+
             }
         });
         team1Add.setForeground(new Color(255, 255, 255));
@@ -180,6 +182,7 @@ public class SelectBestPlayers extends JFrame {
                     jogadores.add(selectedPlayer.getName());
                     System.out.println(jogadores);
                 }
+
             }
         });
         team2Add.setBounds(606, 198, 61, 23);

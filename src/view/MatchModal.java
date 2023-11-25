@@ -13,8 +13,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.util.Calendar;
 
-import static model.GameTable.match;
-
 public class MatchModal extends JFrame {
 
     /**
@@ -27,15 +25,19 @@ public class MatchModal extends JFrame {
 
     /**
      * Launch the application.
+     *eturn
+     *
      */
-    public static void main(String[] args) {
+    public static boolean main(String args, String team2, int gol1, int gol2, int id, String date) {
         EventQueue.invokeLater(new Runnable() {
             public void run() {
                 try {
                     DAO dao = new DAO();
                     Match match = null;
-                    MatchModal frame = new MatchModal(null, null, 0, 0, 0, null);
+                    MatchModal frame = new MatchModal(args, team2, gol1, gol2, id, date);
                     frame.setVisible(true);
+                    frame.setTitle(args + " x " + team2);
+                    frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
                     ImageIcon image = new ImageIcon("ye-face.png");
                     frame.setResizable(false);
                     frame.setLocationRelativeTo(null);
@@ -45,12 +47,14 @@ public class MatchModal extends JFrame {
                 }
             }
         });
+        return false;
     }
 
     /**
      * Create the frame.
      */
     public MatchModal(String team1, String team2, int gol1, int gol2, int id, String date) {
+
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(100, 100, 479, 350);
@@ -126,6 +130,7 @@ public class MatchModal extends JFrame {
                     if(gols1 == 0 && gols2 == 0){
                         JOptionPane.showMessageDialog(null, "Selecione o melhor jogador da partida");
                         BestPlayer.main(null, id);
+
                     } else {
                         JOptionPane.showMessageDialog(null, "Selecione os Jogadores que marcaram gol nessa partida");
                         SelectBestPlayers.main(id, team1, team2);
@@ -136,6 +141,8 @@ public class MatchModal extends JFrame {
                 }
             }
         });
+
+
         btnNewButton.setForeground(new Color(255, 255, 255));
         btnNewButton.setBackground(new Color(59, 130, 246));
         btnNewButton.setBounds(167, 250, 89, 23);

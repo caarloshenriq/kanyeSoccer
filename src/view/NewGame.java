@@ -86,6 +86,7 @@ public class NewGame extends JFrame {
         try {
             dateFormatter = new MaskFormatter("##/##/####");
         } catch (ParseException e1) {
+            JOptionPane.showMessageDialog(NewGame.this, "Informe a data da partida.", "Aviso", JOptionPane.WARNING_MESSAGE);
             e1.printStackTrace();
         }
 
@@ -93,7 +94,7 @@ public class NewGame extends JFrame {
         dateTextField.setBounds(79, 308, 115, 20);
         contentPane.add(dateTextField);
 
-        JButton NewGame = new JButton("Criar Partida");
+        JButton NewGame = new JButton("Salvar Partida");
         MaskFormatter finalDateFormatter = dateFormatter;
         NewGame.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -104,7 +105,8 @@ public class NewGame extends JFrame {
                 try {
                     dataSelecionada = sdf.parse(dateTextField.getText());
                 } catch (ParseException ex) {
-                    ex.printStackTrace();
+                    JOptionPane.showMessageDialog(NewGame.this, "Por favor, informe a data da partida.", "Aviso", JOptionPane.WARNING_MESSAGE);
+                   // ex.printStackTrace();
                 }
 
 
@@ -113,14 +115,16 @@ public class NewGame extends JFrame {
                 dataPartida.setTime(dataSelecionada);
                 int anoPartida = dataPartida.get(Calendar.YEAR);
                 int mesPartida = dataPartida.get(Calendar.MONTH) + 1;
+                int diPartida = dataPartida.get(Calendar.DAY_OF_MONTH);
 
                 Calendar dataAtual = Calendar.getInstance();
                 int anoAtual = dataAtual.get(Calendar.YEAR);
                 int mesAtual = dataAtual.get(Calendar.MONTH) + 1;
+                int diaAtual = dataAtual.get(Calendar.DAY_OF_MONTH);
 
-
-
-                if (anoPartida < anoAtual || (anoPartida == anoAtual && mesPartida < mesAtual)) {
+                if (anoPartida < anoAtual || mesPartida < mesAtual) {
+                    JOptionPane.showMessageDialog(NewGame.this, "A data da partida não pode ser anterior à data atual.", "Aviso", JOptionPane.WARNING_MESSAGE);
+                } else if (diPartida < diaAtual && mesPartida == mesAtual) {
                     JOptionPane.showMessageDialog(NewGame.this, "A data da partida não pode ser anterior à data atual.", "Aviso", JOptionPane.WARNING_MESSAGE);
                 } else {
                     int t1;
@@ -149,7 +153,7 @@ public class NewGame extends JFrame {
                         dispose();
                         PlayersSelect playersModal = null;
                         try {
-                            playersModal = new PlayersSelect(time1, time2, t1,t2);
+                            playersModal = new PlayersSelect(time1, time2, t1, t2);
                         } catch (Exception ex) {
                             throw new RuntimeException(ex);
                         }
@@ -158,6 +162,7 @@ public class NewGame extends JFrame {
                         playersModal.setVisible(true);
                     }
                 }
+
             }
         });
         NewGame.setBounds(372, 376, 163, 34);

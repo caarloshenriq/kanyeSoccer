@@ -85,20 +85,20 @@ public class JLogin extends JFrame {
         btnLogin.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
 
-            if(TeamName.getText().isBlank() || passwordField.getText().isBlank()){
-                JOptionPane.showMessageDialog(null, "Por favor, preencha todos os campos.", "Aviso", JOptionPane.WARNING_MESSAGE);
-            }else {
-                Criptografia criptografia = new Criptografia(passwordField.getText(), Criptografia.MD5);
+                if (TeamName.getText().isBlank() || passwordField.getText().isBlank()) {
+                    JOptionPane.showMessageDialog(null, "Por favor, preencha todos os campos.", "Aviso", JOptionPane.WARNING_MESSAGE);
+                } else {
+                    Criptografia criptografia = new Criptografia(passwordField.getText(), Criptografia.MD5);
 
-                Players player = new Players(0, TeamName.getText(), criptografia.criptografar(), null, null, null, null);
+                    Players player = new Players(0, TeamName.getText(), criptografia.criptografar(), null, null, null, null);
 
-                boolean loginSucesso = dao.realizarLogin(player);
+                    boolean loginSucesso = dao.realizarLogin(player);
 
-                if (loginSucesso) {
-                    dispose();
-                    FirstView.main(new String[0]);
+                    if (loginSucesso) {
+                        dispose();
+                        FirstView.main(new String[0]);
+                    }
                 }
-            }
             }
         });
 

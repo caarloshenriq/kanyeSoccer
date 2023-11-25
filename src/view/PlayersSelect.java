@@ -77,6 +77,8 @@ public class PlayersSelect extends JFrame {
             }
         });
 
+        System.out.println(name1 +" " + name2);
+
         DefaultTableModel principalModel = (DefaultTableModel) PrincipalTable.getModel();
         for (Players jogador : player) {
             principalModel.addRow(new Object[]{jogador.getName(), jogador.getPosition()});
@@ -114,11 +116,7 @@ public class PlayersSelect extends JFrame {
         team2Table = new JTable(team2TableModel);
         team2Pane.setViewportView(team2Table);
 
-        JLabel PrincipalPlayer = new JLabel("JOGADORES");
-        PrincipalPlayer.setFont(new Font("Tahoma", Font.BOLD, 14));
-        PrincipalPlayer.setLabelFor(PrincipalPane);
-        PrincipalPlayer.setBounds(424, 59, 87, 14);
-        contentPane.add(PrincipalPlayer);
+
 
         JLabel Team1Name = new JLabel(name1);
         Team1Name.setFont(new Font("Tahoma", Font.BOLD, 14));
@@ -130,7 +128,7 @@ public class PlayersSelect extends JFrame {
         team2Name.setBounds(736, 58, 87, 14);
         contentPane.add(team2Name);
 
-        JButton newGame = new JButton("Criar Partida");
+        JButton newGame = new JButton("Salvar");
         newGame.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 if (selectedPlayerT2.size() < 7 || selectedPlayerT1.size() < 7) {
@@ -140,6 +138,7 @@ public class PlayersSelect extends JFrame {
                     dispose();
                     FirstView.main(new String[0]);
                 }
+
             }
         });
         newGame.setForeground(new Color(255, 255, 255));
@@ -158,6 +157,7 @@ public class PlayersSelect extends JFrame {
                 } else {
                     JOptionPane.showMessageDialog(null, "Selecione um jogador.");
                 }
+
             }
         });
         team1Add.setForeground(new Color(255, 255, 255));
@@ -179,6 +179,7 @@ public class PlayersSelect extends JFrame {
                 } else {
                     JOptionPane.showMessageDialog(null, "Selecione um jogador.");
                 }
+
             }
         });
         team1Remove.setForeground(new Color(255, 255, 255));
@@ -199,6 +200,7 @@ public class PlayersSelect extends JFrame {
                 } else {
                     JOptionPane.showMessageDialog(null, "Selecione um jogador.");
                 }
+
             }
         });
         team2Remove.setForeground(new Color(255, 255, 255));
@@ -221,45 +223,46 @@ public class PlayersSelect extends JFrame {
                 } else {
                     JOptionPane.showMessageDialog(null, "Selecione um jogador.");
                 }
+
             }
         });
         Team2Add.setForeground(new Color(255, 255, 255));
         Team2Add.setBackground(new Color(59, 130, 246));
-//        JButton AuthAdd = new JButton("Add. Automaticamente");
-//        AuthAdd.addActionListener(new ActionListener() {
-//            public void actionPerformed(ActionEvent e) {
-//
-//                 if (autoSelect) {
-//                    JOptionPane.showMessageDialog(null, "A distribuição automática só pode ser utilizada uma vez.");
-//                    return;
-//                }
-//                    Collections.shuffle(player);
-//
-//                    for (int i = 0; i < 7; i++) {
-//                        Players selectedPlayer = player.get(i);
-//                        team1TableModel.addRow(new Object[]{selectedPlayer.getName(), selectedPlayer.getPosition()});
-//                        selectedPlayerT1.add(selectedPlayer.getId());
-//                    }
-//                    for (int i = 7; i < 14; i++) {
-//                        Players selectedPlayer = player.get(i);
-//                        team2TableModel.addRow(new Object[]{selectedPlayer.getName(), selectedPlayer.getPosition()});
-//                        selectedPlayerT2.add(selectedPlayer.getId());
-//                    }
-//                    DefaultTableModel principalModel = (DefaultTableModel) PrincipalTable.getModel();
-//                    principalModel.setRowCount(0);
-//
-//                    for (int i = 14; i < player.size(); i++) {
-//                        Players selectedPlayer = player.get(i);
-//                        principalModel.addRow(new Object[]{selectedPlayer.getName(), selectedPlayer.getPosition()});
-//                    }
-//                autoSelect = !autoSelect;
-//                }
-//
-//        });
-//        AuthAdd.setForeground(new Color(255, 255, 255));
-//        AuthAdd.setBackground(new Color(59, 130, 246));
-//        AuthAdd.setBounds(10, 407, 175, 23);
-//        contentPane.add(AuthAdd);
+        JButton AuthAdd = new JButton("Add. Automaticamente");
+        AuthAdd.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+
+                 if (autoSelect) {
+                    JOptionPane.showMessageDialog(null, "A distribuição automática só pode ser utilizada uma vez.");
+
+                }
+                    Collections.shuffle(player);
+
+                for (Players selectedPlayer : player.subList(0, 7)) {
+                    team1TableModel.addRow(new Object[]{selectedPlayer.getName(), selectedPlayer.getPosition()});
+                    selectedPlayerT1.add(selectedPlayer.getId());
+                }
+
+                for (Players selectedPlayer : player.subList(7, 14)) {
+                    team2TableModel.addRow(new Object[]{selectedPlayer.getName(), selectedPlayer.getPosition()});
+                    selectedPlayerT2.add(selectedPlayer.getId());
+                }
+
+                DefaultTableModel principalModel = (DefaultTableModel) PrincipalTable.getModel();
+                principalModel.setRowCount(0);
+
+                for (Players selectedPlayer : player.subList(14, player.size())) {
+                    principalModel.addRow(new Object[]{selectedPlayer.getName(), selectedPlayer.getPosition()});
+                }
+                autoSelect = !autoSelect;
+
+            }
+
+        });
+        AuthAdd.setForeground(new Color(255, 255, 255));
+        AuthAdd.setBackground(new Color(59, 130, 246));
+        AuthAdd.setBounds(10, 407, 175, 23);
+        contentPane.add(AuthAdd);
 
         Team2Add.setBounds(606, 153, 61, 23);
         contentPane.add(Team2Add);

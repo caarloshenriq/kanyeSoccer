@@ -62,6 +62,7 @@ public class FirstView extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 dispose();
                 JPrincipal.main(new String[0]);
+
             }
         });
         players.setBounds(85, 212, 121, 34);
@@ -98,6 +99,7 @@ public class FirstView extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 dispose();
                 Games.main(new String[0]);
+
             }
         });
         games.setBounds(635, 212, 121, 34);
