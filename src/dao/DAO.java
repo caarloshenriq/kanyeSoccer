@@ -22,11 +22,11 @@ public class DAO {
     public static ResultSet resultSet = null;
     private static int idDoTime;
 
-    private static final String CHECK_TEAM_EXISTENCE = "SELECT COUNT(*) FROM player WHERE name = ?";
+    private static final String CHECK_TEAM_EXISTENCE = "SELECT COUNT(*) FROM player WHERE username = ?";
     private static final String CHECK_NUMBER_EXIST = "SELECT COUNT(*) FROM player WHERE number = ?";
-    private static final String LOGIN = "SELECT * FROM player WHERE name = ? AND password = ?";
+    private static final String LOGIN = "SELECT * FROM player WHERE username = ? AND password = ?";
 
-    private static final String CREATE_PLAYER = "INSERT INTO player (name, password, number, position) VALUES (?,?,?,?);";
+    private static final String CREATE_PLAYER = "INSERT INTO player (name, password, number, position, username) VALUES (?,?,?,?,?);";
 
     private static final String LIST_PLAYER = "SELECT id,name,gols,number,position FROM player ORDER BY gols DESC";
     private static final String RANKING_TEAMS = "SELECT name, vitorias, tecnico FROM team ORDER BY vitorias DESC;";
@@ -53,7 +53,7 @@ public class DAO {
 
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(query);
-            preparedStatement.setString(1, players.getName());
+            preparedStatement.setString(1, players.getUserName());
             preparedStatement.setString(2, players.getPassword());
 
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -62,7 +62,7 @@ public class DAO {
                 JOptionPane.showMessageDialog(null, "Login Bem sucedido.");
                 return true;
             } else {
-                JOptionPane.showMessageDialog(null, "Nome do usuário e/ou senha inválidos");
+                JOptionPane.showMessageDialog(null, "username e/ou senha inválidos");
                 return false;
 
             }
@@ -84,12 +84,12 @@ public class DAO {
 
             try {
                 PreparedStatement checkExistenceStatement = connection.prepareStatement(queryCheckExistence);
-                checkExistenceStatement.setString(1, player.getName());
+                checkExistenceStatement.setString(1, player.getUserName());
                 ResultSet resultSet = checkExistenceStatement.executeQuery();
                 if (resultSet.next()) {
                     int count = resultSet.getInt(1);
                     if (count > 0) {
-                        JOptionPane.showMessageDialog(null, "Nome de jogador já está em uso. Tente outro!!");
+                        JOptionPane.showMessageDialog(null, "username já está em uso. Tente outro!!");
                         return false;
                     }
                 }
@@ -110,7 +110,8 @@ public class DAO {
                 createPlayerStatement.setString(i++, player.getName());
                 createPlayerStatement.setString(i++, player.getPassword());
                 createPlayerStatement.setString(i++, player.getNumber());
-                createPlayerStatement.setString(i, player.getPosition());
+                createPlayerStatement.setString(i++, player.getPosition());
+                createPlayerStatement.setString(i, player.getUserName());
 
                 createPlayerStatement.execute(); // Corrigido para usar createPlayerStatement
                 connection.commit();

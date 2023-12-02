@@ -77,7 +77,7 @@ public class JLogin extends JFrame {
         TeamName.setBounds(46, 48, 199, 20);
         panel.add(TeamName);
 
-        labelEmail = new JLabel("Nome:");
+        labelEmail = new JLabel("username:");
         labelEmail.setBounds(46, 34, 121, 14);
         panel.add(labelEmail);
 
@@ -90,7 +90,7 @@ public class JLogin extends JFrame {
                 } else {
                     Criptografia criptografia = new Criptografia(passwordField.getText(), Criptografia.MD5);
 
-                    Players player = new Players(0, TeamName.getText(), criptografia.criptografar(), null, null, null, null);
+                    Players player = new Players(0, null, criptografia.criptografar(), null, null, null, null,TeamName.getText());
 
                     boolean loginSucesso = dao.realizarLogin(player);
 
@@ -99,6 +99,7 @@ public class JLogin extends JFrame {
                         FirstView.main(new String[0]);
                     }
                 }
+
             }
         });
 

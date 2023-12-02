@@ -118,7 +118,7 @@ public class SelectBestPlayers extends JFrame {
         JLabel PrincipalPlayer = new JLabel("GOLEADORES");
         PrincipalPlayer.setFont(new Font("Tahoma", Font.BOLD, 14));
         PrincipalPlayer.setLabelFor(PrincipalPane);
-        PrincipalPlayer.setBounds(424, 59, 87, 14);
+        PrincipalPlayer.setBounds(410, 58, 137, 14);
         contentPane.add(PrincipalPlayer);
 
         JLabel team2Name = new JLabel(team2);
@@ -137,6 +137,7 @@ public class SelectBestPlayers extends JFrame {
                 } catch (SQLException ex) {
                     throw new RuntimeException(ex);
                 }
+
 
             }
         });
@@ -161,6 +162,7 @@ public class SelectBestPlayers extends JFrame {
                     System.out.println(jogadores);
                 }
 
+
             }
         });
         team1Add.setForeground(new Color(255, 255, 255));
@@ -183,6 +185,7 @@ public class SelectBestPlayers extends JFrame {
                     System.out.println(jogadores);
                 }
 
+
             }
         });
         team2Add.setBounds(606, 198, 61, 23);
@@ -201,6 +204,7 @@ public class SelectBestPlayers extends JFrame {
                     players.remove(selectRow);
                     jogadores.remove(selectRow);
                 }
+
             }
         });
         Remove.setBackground(Color.RED);

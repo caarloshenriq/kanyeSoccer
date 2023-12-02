@@ -63,6 +63,7 @@ public class FirstView extends JFrame {
                 dispose();
                 JPrincipal.main(new String[0]);
 
+
             }
         });
         players.setBounds(85, 212, 121, 34);
@@ -75,6 +76,7 @@ public class FirstView extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 dispose();
                 Teams.main(new String[0]);
+
             }
         });
         team.setBounds(258, 212, 121, 34);
@@ -87,6 +89,7 @@ public class FirstView extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 dispose();
                 NewGame.main(new String[0]);
+
             }
         });
         newgame.setBounds(450, 212, 121, 34);
@@ -100,11 +103,26 @@ public class FirstView extends JFrame {
                 dispose();
                 Games.main(new String[0]);
 
+
             }
         });
         games.setBounds(635, 212, 121, 34);
         games.setForeground(new Color(255, 255, 255));
         games.setBackground(new Color(59, 130, 246));
         contentPane.add(games);
+
+        JButton exitButton = new JButton("Sair");
+        exitButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                int result = JOptionPane.showConfirmDialog(null, "Você realmente deseja sair do programa?", "Ye Soccer",JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+                if(result == JOptionPane.YES_OPTION){
+                    dispose();
+                }
+            }
+        });
+        exitButton.setBounds(10, 11, 89, 23);
+        exitButton.setForeground(new Color(255, 255, 255));
+        exitButton.setBackground(new Color(255, 0, 0));
+        contentPane.add(exitButton);
     }
 }

@@ -139,6 +139,7 @@ public class PlayersSelect extends JFrame {
                     FirstView.main(new String[0]);
                 }
 
+
             }
         });
         newGame.setForeground(new Color(255, 255, 255));
@@ -157,6 +158,7 @@ public class PlayersSelect extends JFrame {
                 } else {
                     JOptionPane.showMessageDialog(null, "Selecione um jogador.");
                 }
+
 
             }
         });
@@ -180,6 +182,7 @@ public class PlayersSelect extends JFrame {
                     JOptionPane.showMessageDialog(null, "Selecione um jogador.");
                 }
 
+
             }
         });
         team1Remove.setForeground(new Color(255, 255, 255));
@@ -200,6 +203,7 @@ public class PlayersSelect extends JFrame {
                 } else {
                     JOptionPane.showMessageDialog(null, "Selecione um jogador.");
                 }
+
 
             }
         });
@@ -223,6 +227,7 @@ public class PlayersSelect extends JFrame {
                 } else {
                     JOptionPane.showMessageDialog(null, "Selecione um jogador.");
                 }
+
 
             }
         });
@@ -255,6 +260,7 @@ public class PlayersSelect extends JFrame {
                     principalModel.addRow(new Object[]{selectedPlayer.getName(), selectedPlayer.getPosition()});
                 }
                 autoSelect = !autoSelect;
+
 
             }
 

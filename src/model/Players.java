@@ -8,11 +8,11 @@ public class Players {
 	protected String number;
 	protected String position;
 	protected String teamId;
+	protected String userName;
 
 
 
-
-	public Players(int id, String name,String password, String gols, String number, String position, String teamId) {
+	public Players(int id, String name, String password, String gols, String number, String position, String teamId, String userName) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -21,6 +21,7 @@ public class Players {
 		this.number = number;
 		this.position = position;
 		this.teamId = teamId;
+		this.userName = userName;
 	}
 
 	public Players(int id, String name, String gols, String number, String position) {
@@ -72,6 +73,13 @@ public class Players {
 	}
 	public void setTeamId(String teamId) {
 		this.teamId = teamId;
+	}
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
 	}
 
 }

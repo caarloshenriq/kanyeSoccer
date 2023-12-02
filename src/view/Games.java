@@ -73,7 +73,7 @@ public class Games extends JFrame {
 
         contentPane.setLayout(null);
 
-        JLabel lblNewLabel = new JLabel("YE SOCCER");
+        JLabel lblNewLabel = new JLabel("PARTIDAS");
         lblNewLabel.setForeground(new Color(0, 0, 0));
         lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 21));
         lblNewLabel.setBounds(378, 27, 207, 39);
@@ -102,6 +102,7 @@ public class Games extends JFrame {
                             if (status) {
                                 JOptionPane.showMessageDialog(Games.this, "Essa partida ja esta encerrada.", "Aviso", JOptionPane.WARNING_MESSAGE);
                             } else {
+                                dispose();
                                 MatchModal.main(team1, team2, gol1, gol2, id, date);
                             }
 
@@ -122,8 +123,10 @@ public class Games extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 dispose();
                 FirstView.main(new String[0]);
+
             }
         });
+
         backButton.setBounds(10, 11, 89, 23);
         backButton.setForeground(new Color(255, 255, 255));
         backButton.setBackground(new Color(59, 130, 246));

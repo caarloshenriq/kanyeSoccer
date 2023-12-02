@@ -85,14 +85,21 @@ public class NewGame extends JFrame {
         MaskFormatter dateFormatter = null;
         try {
             dateFormatter = new MaskFormatter("##/##/####");
+            dateFormatter.setPlaceholderCharacter('_');
         } catch (ParseException e1) {
-            JOptionPane.showMessageDialog(NewGame.this, "Informe a data da partida.", "Aviso", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(NewGame.this, "Erro ao criar formatador de data.", "Erro", JOptionPane.ERROR_MESSAGE);
             e1.printStackTrace();
         }
 
         JFormattedTextField dateTextField = new JFormattedTextField(dateFormatter);
         dateTextField.setBounds(79, 308, 115, 20);
         contentPane.add(dateTextField);
+
+        // Adicione esta parte para definir a data atual como o valor padrão
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        Calendar dataAtual = Calendar.getInstance();
+        String dataFormatada = sdf.format(dataAtual.getTime());
+        dateTextField.setText(dataFormatada);
 
         JButton NewGame = new JButton("Salvar Partida");
         MaskFormatter finalDateFormatter = dateFormatter;
@@ -122,7 +129,7 @@ public class NewGame extends JFrame {
                 int mesAtual = dataAtual.get(Calendar.MONTH) + 1;
                 int diaAtual = dataAtual.get(Calendar.DAY_OF_MONTH);
 
-                if (anoPartida < anoAtual || mesPartida < mesAtual) {
+                if (anoPartida <= anoAtual && mesPartida < mesAtual) {
                     JOptionPane.showMessageDialog(NewGame.this, "A data da partida não pode ser anterior à data atual.", "Aviso", JOptionPane.WARNING_MESSAGE);
                 } else if (diPartida < diaAtual && mesPartida == mesAtual) {
                     JOptionPane.showMessageDialog(NewGame.this, "A data da partida não pode ser anterior à data atual.", "Aviso", JOptionPane.WARNING_MESSAGE);

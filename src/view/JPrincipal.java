@@ -84,11 +84,16 @@ public class JPrincipal extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 
-		lblNewLabel = new JLabel("YE SOCCER");
+		lblNewLabel = new JLabel("JOGADORES");
 		lblNewLabel.setForeground(new Color(0, 0, 0));
 		lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 21));
 		lblNewLabel.setBounds(378, 27, 207, 39);
 		contentPane.add(lblNewLabel);
+
+		JLabel lblNewLabel_1 = new JLabel("Pesquise por um jogador:");
+		lblNewLabel_1.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		lblNewLabel_1.setBounds(123, 78, 205, 14);
+		contentPane.add(lblNewLabel_1);
 
 		searchPlayer = new JTextField();
 		searchPlayer.addKeyListener(new KeyAdapter() {
@@ -118,6 +123,7 @@ public class JPrincipal extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				dispose();
 				FirstView.main(new String[0]);
+
             }
 		});
 		backButton.setBounds(10, 11, 89, 23);

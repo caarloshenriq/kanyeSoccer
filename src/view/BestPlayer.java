@@ -94,6 +94,7 @@ public class BestPlayer extends JFrame {
                 DAO.BestGoal((String) cboxPlayers.getSelectedItem(), (String) bestPlayer.getSelectedItem());
                 dispose();
                 FirstView.main(new String[0]);
+
             }
         });
         btn.setBounds(168, 200, 89, 23);

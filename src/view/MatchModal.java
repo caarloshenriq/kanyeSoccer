@@ -22,6 +22,7 @@ public class MatchModal extends JFrame {
     private JPanel contentPane;
     private JTextField result1;
     private JTextField result2;
+    public boolean finalizada = false;
 
     /**
      * Launch the application.
@@ -32,12 +33,9 @@ public class MatchModal extends JFrame {
         EventQueue.invokeLater(new Runnable() {
             public void run() {
                 try {
-                    DAO dao = new DAO();
-                    Match match = null;
                     MatchModal frame = new MatchModal(args, team2, gol1, gol2, id, date);
                     frame.setVisible(true);
                     frame.setTitle(args + " x " + team2);
-                    frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
                     ImageIcon image = new ImageIcon("ye-face.png");
                     frame.setResizable(false);
                     frame.setLocationRelativeTo(null);
@@ -54,7 +52,6 @@ public class MatchModal extends JFrame {
      * Create the frame.
      */
     public MatchModal(String team1, String team2, int gol1, int gol2, int id, String date) {
-
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(100, 100, 479, 350);
@@ -96,9 +93,9 @@ public class MatchModal extends JFrame {
         JButton btnNewButton = new JButton("SALVAR");
         btnNewButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+
                 int team1id;
                 int team2id;
-
                 Calendar dataAtual = Calendar.getInstance();
                 int anoAtual = dataAtual.get(Calendar.YEAR);
                 int mesAtual = dataAtual.get(Calendar.MONTH) + 1;
@@ -127,6 +124,7 @@ public class MatchModal extends JFrame {
 
                     DAO.updateMatch(id, gols1, gols2, team1id, team2id);
                     dispose();
+
                     if(gols1 == 0 && gols2 == 0){
                         JOptionPane.showMessageDialog(null, "Selecione o melhor jogador da partida");
                         BestPlayer.main(null, id);
@@ -139,9 +137,21 @@ public class MatchModal extends JFrame {
                     JOptionPane.showMessageDialog(MatchModal.this, "A partida nao pode ser alterada pois ela nao ocorrerá hoje.", "Aviso", JOptionPane.WARNING_MESSAGE);
                     dispose();
                 }
+
             }
         });
 
+        JButton backButton = new JButton("Voltar");
+        backButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                dispose();
+                Games.main(new String[0]);
+            }
+        });
+        backButton.setBounds(10, 11, 89, 23);
+        contentPane.add(backButton);
+        backButton.setForeground(new Color(255, 255, 255));
+        backButton.setBackground(new Color(59, 130, 246));
 
         btnNewButton.setForeground(new Color(255, 255, 255));
         btnNewButton.setBackground(new Color(59, 130, 246));

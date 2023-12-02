@@ -74,6 +74,7 @@ public class Teams extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				dispose();
 				FirstView.main(new String[0]);
+
             }
 		});
 		backButton.setBounds(10, 11, 89, 23);
@@ -81,7 +82,7 @@ public class Teams extends JFrame {
 		backButton.setBackground(new Color(59, 130, 246));
 		contentPane.add(backButton);
 
-		JLabel lblNewLabel = new JLabel("YE SOCCER");
+		JLabel lblNewLabel = new JLabel("TIMES");
 		lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 20));
 		lblNewLabel.setBounds(396, 49, 194, 34);
 		contentPane.add(lblNewLabel);
