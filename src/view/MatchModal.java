@@ -26,8 +26,7 @@ public class MatchModal extends JFrame {
 
     /**
      * Launch the application.
-     *eturn
-     *
+     * eturn
      */
     public static boolean main(String args, String team2, int gol1, int gol2, int id, String date) {
         EventQueue.invokeLater(new Runnable() {
@@ -96,49 +95,34 @@ public class MatchModal extends JFrame {
 
                 int team1id;
                 int team2id;
-                Calendar dataAtual = Calendar.getInstance();
-                int anoAtual = dataAtual.get(Calendar.YEAR);
-                int mesAtual = dataAtual.get(Calendar.MONTH) + 1;
-                int diaAtual = dataAtual.get(Calendar.DAY_OF_MONTH);
-                String dia;
-                if (mesAtual < 10) {
-                    dia = diaAtual + "/0" + mesAtual + "/" + anoAtual;
+
+                if (team1.equals("tabajara fc")) {
+                    team1id = 1;
                 } else {
-                    dia = diaAtual + "/" + mesAtual + "/" + anoAtual;
+                    team1id = 2;
                 }
 
-                if (date.equals(dia)) {
-                    if (team1.equals("tabajara fc")) {
-                        team1id = 1;
-                    } else {
-                        team1id = 2;
-                    }
-
-                    if (team2.equals("tabajara fc")) {
-                        team2id = 1;
-                    } else {
-                        team2id = 2;
-                    }
-                    int gols1 = Integer.parseInt(result1.getText());
-                    int gols2 = Integer.parseInt(result2.getText());
-
-                    DAO.updateMatch(id, gols1, gols2, team1id, team2id);
-                    dispose();
-
-                    if(gols1 == 0 && gols2 == 0){
-                        JOptionPane.showMessageDialog(null, "Selecione o melhor jogador da partida");
-                        BestPlayer.main(null, id);
-
-                    } else {
-                        JOptionPane.showMessageDialog(null, "Selecione os Jogadores que marcaram gol nessa partida");
-                        SelectBestPlayers.main(id, team1, team2);
-                    }
+                if (team2.equals("tabajara fc")) {
+                    team2id = 1;
                 } else {
-                    JOptionPane.showMessageDialog(MatchModal.this, "A partida nao pode ser alterada pois ela nao ocorrerá hoje.", "Aviso", JOptionPane.WARNING_MESSAGE);
-                    dispose();
+                    team2id = 2;
                 }
+                int gols1 = Integer.parseInt(result1.getText());
+                int gols2 = Integer.parseInt(result2.getText());
 
+                DAO.updateMatch(id, gols1, gols2, team1id, team2id);
+                dispose();
+
+                if (gols1 == 0 && gols2 == 0) {
+                    JOptionPane.showMessageDialog(null, "Selecione o melhor jogador da partida");
+                    BestPlayer.main(null, id);
+
+                } else {
+                    JOptionPane.showMessageDialog(null, "Selecione os Jogadores que marcaram gol nessa partida");
+                    SelectBestPlayers.main(id, team1, team2,gols1, gols2);
+                }
             }
+
         });
 
         JButton backButton = new JButton("Voltar");

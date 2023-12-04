@@ -28,6 +28,9 @@ public class BestPlayer extends JFrame {
                     frame.setVisible(true);
                     frame.setResizable(false);
                     frame.setLocationRelativeTo(null);
+                    frame.setTitle("Ye Soccer - Eleger jogadores");
+                    ImageIcon image = new ImageIcon("ye-face.png");
+                    frame.setIconImage(image.getImage());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -88,7 +91,7 @@ public class BestPlayer extends JFrame {
             bestPlayer.addItem(player.getName());
         }
 
-        JButton btn = new JButton("Pronto");
+        JButton btn = new JButton("Salvar");
         btn.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 DAO.BestGoal((String) cboxPlayers.getSelectedItem(), (String) bestPlayer.getSelectedItem());
@@ -97,6 +100,8 @@ public class BestPlayer extends JFrame {
 
             }
         });
+        btn.setForeground(new Color(255, 255, 255));
+        btn.setBackground(new Color(59, 130, 246));
         btn.setBounds(168, 200, 89, 23);
         contentPane.add(btn);
     }

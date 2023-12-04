@@ -28,7 +28,7 @@ public class DAO {
 
     private static final String CREATE_PLAYER = "INSERT INTO player (name, password, number, position, username) VALUES (?,?,?,?,?);";
 
-    private static final String LIST_PLAYER = "SELECT id,name,gols,number,position FROM player ORDER BY gols DESC";
+    private static final String LIST_PLAYER = "SELECT id,name,gols,number,position,username FROM player ORDER BY gols DESC";
     private static final String RANKING_TEAMS = "SELECT name, vitorias, tecnico FROM team ORDER BY vitorias DESC;";
     private static final String CREATE_GAME = "INSERT INTO partidas (team1_id, team2_id, dategame) VALUES (?,?,?)";
 
@@ -143,7 +143,8 @@ public class DAO {
                         resultSet.getString("name"),
                         resultSet.getString("gols"),
                         resultSet.getString("number"),
-                        resultSet.getString("position"));
+                        resultSet.getString("position"),
+                        resultSet.getString("username"));
 
                 playersList.add(player); // Adicione o jogador à lista
             }
@@ -210,7 +211,7 @@ public class DAO {
                 preparedStatement.execute();
                 connection.commit();
 
-                JOptionPane.showMessageDialog(null, "Partida criada com sucesso!!!");
+                JOptionPane.showMessageDialog(null, "selecione os jogadores que irão jogar em cada time");
 
             }
         } catch (Exception e) {
@@ -403,7 +404,8 @@ public class DAO {
                         resultSet.getString("jogador"),
                         resultSet.getString("gols"),
                         resultSet.getString("number"),
-                        resultSet.getString("position"));
+                        resultSet.getString("position"),
+                        resultSet.getString("situation"));
 
                 playersListEmCasa.add(player);
             }
@@ -439,7 +441,8 @@ public class DAO {
                         resultSet.getString("jogador"),
                         resultSet.getString("gols"),
                         resultSet.getString("number"),
-                        resultSet.getString("position"));
+                        resultSet.getString("position"),
+                        resultSet.getString("situation"));
 
                 playersListVisitantes.add(player);
             }
@@ -459,7 +462,7 @@ public class DAO {
         return playersListVisitantes;
     }
 
-    public static void UpdateGoals(List<Integer> players) throws SQLException {
+    public static boolean UpdateGoals(List<Integer> players) throws SQLException {
         Connection connection = Conexao.getInstancia().abrirConexao();
         String q = alterGoals;
         try {
@@ -471,9 +474,11 @@ public class DAO {
                 }
             }
             connection.commit();
-            JOptionPane.showMessageDialog(null, "Partida alterada com sucesso");
+            JOptionPane.showMessageDialog(null, "Selecione os melhores jogadores dessa partida");
+            return true;
         } catch (Exception e) {
             e.printStackTrace();
+            return false;
         }
     }
 
@@ -513,7 +518,8 @@ public class DAO {
                         resultSet.getString("jogador"),
                         resultSet.getString("gols"),
                         resultSet.getString("number"),
-                        resultSet.getString("position"));
+                        resultSet.getString("position"),
+                        resultSet.getString("situation"));
 
                 playersListVisitantes.add(player);
             }

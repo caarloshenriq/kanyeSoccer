@@ -10,6 +10,9 @@ public class Players {
 	protected String teamId;
 	protected String userName;
 
+	protected String situation;
+
+
 
 
 	public Players(int id, String name, String password, String gols, String number, String position, String teamId, String userName) {
@@ -24,12 +27,13 @@ public class Players {
 		this.userName = userName;
 	}
 
-	public Players(int id, String name, String gols, String number, String position) {
+	public Players(int id, String name, String gols, String number, String position, String situation) {
 		this.id = id;
 		this.name = name;
 		this.gols = gols;
 		this.number = number;
 		this.position = position;
+		this.situation = situation;
 	}
 
 	public int getId() {
@@ -81,5 +85,15 @@ public class Players {
 	public void setUserName(String userName) {
 		this.userName = userName;
 	}
+
+	public String getSituation() {
+		return situation;
+	}
+
+	public void setSituation(String situation) {
+		this.situation = situation;
+	}
+
+
 
 }

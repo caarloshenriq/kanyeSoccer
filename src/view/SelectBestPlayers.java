@@ -15,6 +15,8 @@ import java.awt.Font;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
+import static dao.DAO.UpdateGoals;
+
 public class SelectBestPlayers extends JFrame {
 
     private JPanel contentPane;
@@ -24,20 +26,26 @@ public class SelectBestPlayers extends JFrame {
 
     private ArrayList<Players> Team1Players;
     private ArrayList<Players> Team2Players;
+
+    private ArrayList<Players> Players;
     private ArrayList<Integer> players = new ArrayList<>();
     private static ArrayList<String> jogadores = new ArrayList<>();
     private static ArrayList<String> playerName = new ArrayList<>();
+
     /**
      * Launch the application.
      */
-    public static void main(int args, String team1, String team2) {
+    public static void main(int args, String team1, String team2, int gols1, int gols2) {
         EventQueue.invokeLater(new Runnable() {
             public void run() {
                 try {
-                    SelectBestPlayers frame = new SelectBestPlayers(args, team1, team2);
+                    SelectBestPlayers frame = new SelectBestPlayers(args, team1, team2, gols1, gols2);
                     frame.setVisible(true);
                     frame.setResizable(false);
+                    frame.setTitle("Ye Soccer - Eleger Jogadores");
                     frame.setLocationRelativeTo(null);
+                    ImageIcon image = new ImageIcon("ye-face.png");
+                    frame.setIconImage(image.getImage());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -48,10 +56,13 @@ public class SelectBestPlayers extends JFrame {
     /**
      * Create the frame.
      */
-    public SelectBestPlayers(int idMatch, String team1, String team2) throws Exception {
+    public SelectBestPlayers(int idMatch, String team1, String team2, int gols1, int gols2) throws Exception {
         DAO dao = new DAO();
         Team1Players = dao.listarPlayersEmCasa(idMatch);
         Team2Players = dao.listarPlayersVisitantes(idMatch);
+        Players = dao.GetPlayersByMatch(idMatch);
+        final int[] selectedPlayerT1 = {0};
+        final int[] selectedPlayerT2 = {0};
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(100, 100, 930, 493);
         contentPane = new JPanel();
@@ -67,10 +78,10 @@ public class SelectBestPlayers extends JFrame {
 
         PrincipalTalbe = new JTable();
         PrincipalTalbe.setModel(new DefaultTableModel(
-                new Object[][] {
+                new Object[][]{
                 },
-                new String[] {
-                        "Nome", "Posi\u00E7\u00E3o"
+                new String[]{
+                        "Nome", "Posi\u00E7\u00E3o", "time"
                 }
         ));
         PrincipalPane.setViewportView(PrincipalTalbe);
@@ -82,9 +93,9 @@ public class SelectBestPlayers extends JFrame {
 
         team1Table = new JTable();
         team1Table.setModel(new DefaultTableModel(
-                new Object[][] {
+                new Object[][]{
                 },
-                new String[] {
+                new String[]{
                         "Nome", "Posi\u00E7\u00E3o"
                 }
         ));
@@ -103,9 +114,9 @@ public class SelectBestPlayers extends JFrame {
         contentPane.add(Team1Name);
         team2Table = new JTable();
         team2Table.setModel(new DefaultTableModel(
-                new Object[][] {
+                new Object[][]{
                 },
-                new String[] {
+                new String[]{
                         "Nome", "Posi\u00E7\u00E3o"
                 }
         ));
@@ -127,13 +138,16 @@ public class SelectBestPlayers extends JFrame {
         contentPane.add(team2Name);
 
 
-        JButton newGame = new JButton("Eleger jogadores");
+        JButton newGame = new JButton("Salvar");
         newGame.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 try {
-                    dao.UpdateGoals(players);
-                    dispose();
-                   BestPlayer.main(jogadores, idMatch);
+                    boolean result = UpdateGoals(players);
+
+                    if (result) {
+                        BestPlayer.main(jogadores, idMatch);
+                        dispose();
+                    }
                 } catch (SQLException ex) {
                     throw new RuntimeException(ex);
                 }
@@ -147,22 +161,25 @@ public class SelectBestPlayers extends JFrame {
         contentPane.add(newGame);
 
 
-
         JButton team1Add = new JButton(">>");
         team1Add.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 int selectRow = team1Table.getSelectedRow();
-                if(selectRow < 0){
+
+                if (selectRow < 0) {
                     JOptionPane.showMessageDialog(null, "Selecione um jogador.");
-                }else {
-                    Players selectedPlayer = Team1Players.get(selectRow);
-                    PrincipalModel.addRow(new Object[]{selectedPlayer.getName(), selectedPlayer.getPosition()});
-                    players.add(selectedPlayer.getId());
-                    jogadores.add(selectedPlayer.getName());
-                    System.out.println(jogadores);
+                } else {
+                    if (selectedPlayerT1[0] < gols1) {
+                        Players selectedPlayer = Team1Players.get(selectRow);
+                        PrincipalModel.addRow(new Object[]{selectedPlayer.getName(), selectedPlayer.getPosition(), selectedPlayer.getSituation()});
+                        players.add(selectedPlayer.getId());
+                        jogadores.add(selectedPlayer.getName());
+                        selectedPlayerT1[0]++;
+                        System.out.println(selectedPlayerT1[0]);
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Você já atingiu a soma de gols do seu time nessa partida.");
+                    }
                 }
-
-
             }
         });
         team1Add.setForeground(new Color(255, 255, 255));
@@ -175,14 +192,19 @@ public class SelectBestPlayers extends JFrame {
         team2Add.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 int selectRow = team2Table.getSelectedRow();
-                if(selectRow < 0){
+                if (selectRow < 0) {
                     JOptionPane.showMessageDialog(null, "Selecione um jogador.");
-                }else {
-                    Players selectedPlayer = Team2Players.get(selectRow);
-                    PrincipalModel.addRow(new Object[]{selectedPlayer.getName(), selectedPlayer.getPosition()});
-                    players.add(selectedPlayer.getId());
-                    jogadores.add(selectedPlayer.getName());
-                    System.out.println(jogadores);
+                } else {
+                    if (selectedPlayerT2[0] < gols2) {
+                        Players selectedPlayer = Team2Players.get(selectRow);
+                        PrincipalModel.addRow(new Object[]{selectedPlayer.getName(), selectedPlayer.getPosition(), selectedPlayer.getSituation()});
+                        players.add(selectedPlayer.getId());
+                        jogadores.add(selectedPlayer.getName());
+                        System.out.println(jogadores);
+                        selectedPlayerT2[0]++;
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Você já atingiu a soma de gols do seu time nessa partida.");
+                    }
                 }
 
 
@@ -196,13 +218,22 @@ public class SelectBestPlayers extends JFrame {
         JButton Remove = new JButton("Remover");
         Remove.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                int selectRow = PrincipalTalbe.getSelectedRow();
-                if(selectRow < 0){
+                int selectedRow = PrincipalTalbe.getSelectedRow();
+                PrincipalTalbe.setRowSelectionInterval(selectedRow, selectedRow);
+                String team = (String) PrincipalTalbe.getValueAt(selectedRow, 2);
+
+                if (selectedRow < 0) {
                     JOptionPane.showMessageDialog(null, "Selecione um jogador.");
-                } else{
-                    PrincipalModel.removeRow(selectRow);
-                    players.remove(selectRow);
-                    jogadores.remove(selectRow);
+                } else {
+                    PrincipalModel.removeRow(selectedRow);
+                    players.remove(selectedRow);
+                    jogadores.remove(selectedRow);
+
+                    if (team.equals("casa")) {
+                        selectedPlayerT1[0]--;
+                    } else {
+                        selectedPlayerT2[0]--;
+                    }
                 }
 
             }

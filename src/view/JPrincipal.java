@@ -51,7 +51,7 @@ public class JPrincipal extends JFrame {
 				try {
 					JPrincipal frame = new JPrincipal();
 					frame.setVisible(true);
-					frame.setTitle("Ye Soccer");
+					frame.setTitle("Ye Soccer - Jogadores");
 					ImageIcon image = new ImageIcon("ye-face.png");
 					frame.setResizable(false);
 					frame.setIconImage(image.getImage());

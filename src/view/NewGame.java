@@ -28,7 +28,7 @@ public class NewGame extends JFrame {
                 try {
                     NewGame frame = new NewGame();
                     frame.setVisible(true);
-                    frame.setTitle("Ye Soccer");
+                    frame.setTitle("Ye Soccer - Nova Partida");
                     frame.setResizable(false);
                     frame.setLocationRelativeTo(null);
                     ImageIcon image = new ImageIcon("ye-face.png");
@@ -58,13 +58,13 @@ public class NewGame extends JFrame {
         team1.setBounds(79, 201, 220, 20);
         contentPane.add(team1);
         team1.add("tabajara fc");
-        team1.add("charo fc");
+        team1.add("ibís fc");
 
         Choice team2 = new Choice();
         team2.setBounds(599, 201, 220, 20);
         contentPane.add(team2);
         team2.add("tabajara fc");
-        team2.add("charo fc");
+        team2.add("ibís fc");
 
         JLabel lblNewLabel_1 = new JLabel("VS.");
         lblNewLabel_1.setFont(new Font("Tahoma", Font.BOLD, 15));
@@ -167,6 +167,11 @@ public class NewGame extends JFrame {
                         playersModal.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
                         playersModal.setLocationRelativeTo(playersModal);
                         playersModal.setVisible(true);
+                        playersModal.setTitle("Ye Soccer - Seleção de jogadores");
+                        playersModal.setResizable(false);
+                        playersModal.setLocationRelativeTo(null);
+                        ImageIcon image = new ImageIcon("ye-face.png");
+                        playersModal.setIconImage(image.getImage());
                     }
                 }
 

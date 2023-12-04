@@ -77,7 +77,7 @@ public class PlayersSelect extends JFrame {
             }
         });
 
-        System.out.println(name1 +" " + name2);
+        System.out.println(name1 + " " + name2);
 
         DefaultTableModel principalModel = (DefaultTableModel) PrincipalTable.getModel();
         for (Players jogador : player) {
@@ -117,7 +117,6 @@ public class PlayersSelect extends JFrame {
         team2Pane.setViewportView(team2Table);
 
 
-
         JLabel Team1Name = new JLabel(name1);
         Team1Name.setFont(new Font("Tahoma", Font.BOLD, 14));
         Team1Name.setBounds(83, 58, 87, 14);
@@ -148,18 +147,27 @@ public class PlayersSelect extends JFrame {
         team1Add.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 int selectedRow = PrincipalTable.getSelectedRow();
+                PrincipalTable.setRowSelectionInterval(selectedRow, selectedRow);
+                String name = (String) PrincipalTable.getValueAt(selectedRow, 0);
+                String position = (String) PrincipalTable.getValueAt(selectedRow, 1);
+                int playerId = -1;
+
+                for (Players player : player) {
+                    if (player.getName().equals(name)) {
+                        playerId = player.getId();
+                        break;
+                    }
+                }
                 if (selectedPlayerT1.size() > 9) {
                     JOptionPane.showMessageDialog(null, "Quantidade maxima de jogadores (10) excedida.");
                 } else if (selectedRow >= 0 && selectedRow < player.size()) {
-                    Players selectedPlayer = player.get(selectedRow);
                     principalTableModel.removeRow(selectedRow);
-                    team1TableModel.addRow(new Object[]{selectedPlayer.getName(), selectedPlayer.getPosition()});
-                    selectedPlayerT1.add(selectedPlayer.getId());
+                    DefaultTableModel model = (DefaultTableModel) team1Table.getModel();
+                    model.addRow(new Object[]{name, position});
+                    selectedPlayerT1.add(playerId);
                 } else {
                     JOptionPane.showMessageDialog(null, "Selecione um jogador.");
                 }
-
-
             }
         });
         team1Add.setForeground(new Color(255, 255, 255));
@@ -171,18 +179,25 @@ public class PlayersSelect extends JFrame {
         team1Remove.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 int selectedRow = team1Table.getSelectedRow();
-                System.out.println(selectedRow);
+                team1Table.setRowSelectionInterval(selectedRow, selectedRow);
+                String name = (String) team1Table.getValueAt(selectedRow, 0);
+                String position = (String) team1Table.getValueAt(selectedRow, 1);
+                int playerId = -1;
+
+                for (Players player : player) {
+                    if (player.getName().equals(name)) {
+                        playerId = player.getId();
+                        break;
+                    }
+                }
                 if (selectedRow >= 0 && selectedRow < team1Table.getRowCount()) {
-                    Players selectedPlayer = player.get(selectedRow);
                     team1TableModel.removeRow(selectedRow);
-                    principalTableModel.addRow(new Object[]{selectedPlayer.getName(), selectedPlayer.getPosition()});
-                    selectedPlayerT1.remove(selectedRow);
-                    System.out.println(selectedPlayerT1);
+                    DefaultTableModel model = (DefaultTableModel) PrincipalTable.getModel();
+                    model.addRow(new Object[]{name, position});
+                    selectedPlayerT1.remove(playerId);
                 } else {
                     JOptionPane.showMessageDialog(null, "Selecione um jogador.");
                 }
-
-
             }
         });
         team1Remove.setForeground(new Color(255, 255, 255));
@@ -193,18 +208,27 @@ public class PlayersSelect extends JFrame {
         JButton team2Remove = new JButton("<<");
         team2Remove.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+
                 int selectedRow = team2Table.getSelectedRow();
-                //System.out.println(selectedRow);
+                team1Table.setRowSelectionInterval(selectedRow, selectedRow);
+                String name = (String) team2Table.getValueAt(selectedRow, 0);
+                String position = (String) team2Table.getValueAt(selectedRow, 1);
+                int playerId = -1;
+
+                for (Players player : player) {
+                    if (player.getName().equals(name)) {
+                        playerId = player.getId();
+                        break;
+                    }
+                }
                 if (selectedRow >= 0 && selectedRow < team2Table.getRowCount()) {
-                    Players selectedPlayer = player.get(selectedRow);
                     team2TableModel.removeRow(selectedRow);
-                    principalTableModel.addRow(new Object[]{selectedPlayer.getName(), selectedPlayer.getPosition()});
-                    selectedPlayerT2.remove(selectedRow);
+                    DefaultTableModel model = (DefaultTableModel) PrincipalTable.getModel();
+                    model.addRow(new Object[]{name, position});
+                    selectedPlayerT2.remove(playerId);
                 } else {
                     JOptionPane.showMessageDialog(null, "Selecione um jogador.");
                 }
-
-
             }
         });
         team2Remove.setForeground(new Color(255, 255, 255));
@@ -215,21 +239,35 @@ public class PlayersSelect extends JFrame {
         JButton Team2Add = new JButton(">>");
         Team2Add.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+//                if (autoSelect) {
+//                    System.out.println("fds");
+//                } else {
                 int selectedRow = PrincipalTable.getSelectedRow();
+                PrincipalTable.setRowSelectionInterval(selectedRow, selectedRow);
+                String name = (String) PrincipalTable.getValueAt(selectedRow, 0);
+                String position = (String) PrincipalTable.getValueAt(selectedRow, 1);
+                int playerId = -1; // Valor padrão, caso o jogador não seja encontrado
+
+                for (Players player : player) {
+                    if (player.getName().equals(name)) {
+                        playerId = player.getId();
+                        break; // Você encontrou o jogador, então pode sair do loop
+                    }
+                }
                 if (selectedPlayerT2.size() > 9) {
                     JOptionPane.showMessageDialog(null, "Quantidade maxima de jogadores (10) excedida.");
                     System.out.println(selectedPlayerT2.size());
                 } else if (selectedRow >= 0 && selectedRow < player.size()) {
-                    Players selectedPlayer = player.get(selectedRow);
                     principalTableModel.removeRow(selectedRow);
-                    team2TableModel.addRow(new Object[]{selectedPlayer.getName(), selectedPlayer.getPosition()});
-                    selectedPlayerT2.add(selectedPlayer.getId());
+                    DefaultTableModel model = (DefaultTableModel) team2Table.getModel();
+                    model.addRow(new Object[]{name, position});
+                    selectedPlayerT2.add(playerId);
                 } else {
                     JOptionPane.showMessageDialog(null, "Selecione um jogador.");
                 }
-
-
             }
+
+            //}
         });
         Team2Add.setForeground(new Color(255, 255, 255));
         Team2Add.setBackground(new Color(59, 130, 246));
@@ -237,30 +275,30 @@ public class PlayersSelect extends JFrame {
         AuthAdd.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
 
-                 if (autoSelect) {
+                if (autoSelect) {
                     JOptionPane.showMessageDialog(null, "A distribuição automática só pode ser utilizada uma vez.");
 
-                }
+                } else {
                     Collections.shuffle(player);
 
-                for (Players selectedPlayer : player.subList(0, 7)) {
-                    team1TableModel.addRow(new Object[]{selectedPlayer.getName(), selectedPlayer.getPosition()});
-                    selectedPlayerT1.add(selectedPlayer.getId());
+                    for (Players selectedPlayer : player.subList(0, 7)) {
+                        team1TableModel.addRow(new Object[]{selectedPlayer.getName(), selectedPlayer.getPosition()});
+                        selectedPlayerT1.add(selectedPlayer.getId());
+                    }
+
+                    for (Players selectedPlayer : player.subList(7, 14)) {
+                        team2TableModel.addRow(new Object[]{selectedPlayer.getName(), selectedPlayer.getPosition()});
+                        selectedPlayerT2.add(selectedPlayer.getId());
+                    }
+
+                    DefaultTableModel principalModel = (DefaultTableModel) PrincipalTable.getModel();
+                    principalModel.setRowCount(0);
+
+                    for (Players selectedPlayer : player.subList(14, player.size())) {
+                        principalModel.addRow(new Object[]{selectedPlayer.getName(), selectedPlayer.getPosition()});
+                    }
+                    autoSelect = !autoSelect;
                 }
-
-                for (Players selectedPlayer : player.subList(7, 14)) {
-                    team2TableModel.addRow(new Object[]{selectedPlayer.getName(), selectedPlayer.getPosition()});
-                    selectedPlayerT2.add(selectedPlayer.getId());
-                }
-
-                DefaultTableModel principalModel = (DefaultTableModel) PrincipalTable.getModel();
-                principalModel.setRowCount(0);
-
-                for (Players selectedPlayer : player.subList(14, player.size())) {
-                    principalModel.addRow(new Object[]{selectedPlayer.getName(), selectedPlayer.getPosition()});
-                }
-                autoSelect = !autoSelect;
-
 
             }
 

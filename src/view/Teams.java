@@ -43,7 +43,7 @@ public class Teams extends JFrame {
 				try {
 					Teams frame = new Teams();
 					frame.setVisible(true);
-					frame.setTitle("Ye Soccer");
+					frame.setTitle("Ye Soccer - Times");
 					ImageIcon image = new ImageIcon("ye-face.png");
 					frame.setResizable(false);
 					frame.setIconImage(image.getImage());
