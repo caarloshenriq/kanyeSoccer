@@ -113,7 +113,7 @@ public class NewGame extends JFrame {
                     dataSelecionada = sdf.parse(dateTextField.getText());
                 } catch (ParseException ex) {
                     JOptionPane.showMessageDialog(NewGame.this, "Por favor, informe a data da partida.", "Aviso", JOptionPane.WARNING_MESSAGE);
-                   // ex.printStackTrace();
+                    // ex.printStackTrace();
                 }
 
 
@@ -133,6 +133,8 @@ public class NewGame extends JFrame {
                     JOptionPane.showMessageDialog(NewGame.this, "A data da partida não pode ser anterior à data atual.", "Aviso", JOptionPane.WARNING_MESSAGE);
                 } else if (diPartida < diaAtual && mesPartida == mesAtual) {
                     JOptionPane.showMessageDialog(NewGame.this, "A data da partida não pode ser anterior à data atual.", "Aviso", JOptionPane.WARNING_MESSAGE);
+                } else if (anoPartida > 31 || mesPartida > 12) {
+                    JOptionPane.showMessageDialog(NewGame.this, "Insira uma data valida.", "Aviso", JOptionPane.WARNING_MESSAGE);
                 } else {
                     int t1;
                     int t2;

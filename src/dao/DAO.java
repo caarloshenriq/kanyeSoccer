@@ -309,7 +309,7 @@ public class DAO {
             connection.commit();
 
             if (gols1 == gols2) {
-                JOptionPane.showMessageDialog(null, "Partida alterada com sucesso");
+                JOptionPane.showMessageDialog(null, "Selecione o melhor jogador da partida");
             } else {
 
                 if (gols1 > gols2) {
@@ -323,7 +323,6 @@ public class DAO {
                 preparedStatement.setInt(l, winner);
                 preparedStatement.execute();
                 connection.commit();
-                //JOptionPane.showMessageDialog(null, "Partida alterada com sucesso");
             }
 
 
@@ -370,7 +369,7 @@ public class DAO {
             }
 
             connection.commit();
-            //JOptionPane.showMessageDialog(null, "Partida alterada com sucesso");
+            JOptionPane.showMessageDialog(null, "Partida criada com sucesso");
 
         } catch (SQLException e) {
             try {

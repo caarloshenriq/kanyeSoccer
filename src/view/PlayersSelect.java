@@ -13,6 +13,8 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 public class PlayersSelect extends JFrame {
 
@@ -58,11 +60,14 @@ public class PlayersSelect extends JFrame {
         contentPane.add(PrincipalPane);
 
         DefaultTableModel principalTableModel = new DefaultTableModel(
-                new String[]{
-                        "Nome", "Posição"
-                },
-                0
-        );
+                new String[]{"Nome", "Posição"}, 0
+        ) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                // Retorne false para todas as colunas que você não quer que sejam editáveis
+                return false; // Nenhuma célula é editável
+            }
+        };
 
         PrincipalTable = new JTable(principalTableModel);
 
@@ -77,7 +82,6 @@ public class PlayersSelect extends JFrame {
             }
         });
 
-        System.out.println(name1 + " " + name2);
 
         DefaultTableModel principalModel = (DefaultTableModel) PrincipalTable.getModel();
         for (Players jogador : player) {
@@ -93,11 +97,13 @@ public class PlayersSelect extends JFrame {
         contentPane.add(team1Pane);
 
         DefaultTableModel team1TableModel = new DefaultTableModel(
-                new String[]{
-                        "Nome", "Posição"
-                },
-                0
-        );
+                new String[]{"Nome", "Posição"}, 0
+        ) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false; // Nenhuma célula é editável
+            }
+        };
 
         team1Table = new JTable(team1TableModel);
         team1Pane.setViewportView(team1Table);
@@ -107,11 +113,13 @@ public class PlayersSelect extends JFrame {
         contentPane.add(team2Pane);
 
         DefaultTableModel team2TableModel = new DefaultTableModel(
-                new String[]{
-                        "Nome", "Posição"
-                },
-                0
-        );
+                new String[]{"Nome", "Posição"}, 0
+        ) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false; // Nenhuma célula é editável
+            }
+        };
 
         team2Table = new JTable(team2TableModel);
         team2Pane.setViewportView(team2Table);
@@ -179,22 +187,25 @@ public class PlayersSelect extends JFrame {
         team1Remove.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 int selectedRow = team1Table.getSelectedRow();
-                team1Table.setRowSelectionInterval(selectedRow, selectedRow);
-                String name = (String) team1Table.getValueAt(selectedRow, 0);
-                String position = (String) team1Table.getValueAt(selectedRow, 1);
-                int playerId = -1;
 
-                for (Players player : player) {
-                    if (player.getName().equals(name)) {
-                        playerId = player.getId();
-                        break;
-                    }
-                }
                 if (selectedRow >= 0 && selectedRow < team1Table.getRowCount()) {
-                    team1TableModel.removeRow(selectedRow);
-                    DefaultTableModel model = (DefaultTableModel) PrincipalTable.getModel();
-                    model.addRow(new Object[]{name, position});
-                    selectedPlayerT1.remove(playerId);
+                    String name = (String) team1Table.getValueAt(selectedRow, 0);
+                    String position = (String) team1Table.getValueAt(selectedRow, 1);
+                    int playerId = -1;
+
+                    for (Players player : player) {
+                        if (player.getName().equals(name)) {
+                            playerId = player.getId();
+                            break;
+                        }
+                    }
+
+                    if (playerId != -1 && selectedPlayerT1.contains(playerId)) {
+                        team1TableModel.removeRow(selectedRow);
+                        DefaultTableModel model = (DefaultTableModel) PrincipalTable.getModel();
+                        model.addRow(new Object[]{name, position});
+                        selectedPlayerT1.remove(Integer.valueOf(playerId)); // Use Integer.valueOf para remover pelo valor e não pelo índice
+                    }
                 } else {
                     JOptionPane.showMessageDialog(null, "Selecione um jogador.");
                 }
@@ -210,22 +221,25 @@ public class PlayersSelect extends JFrame {
             public void actionPerformed(ActionEvent e) {
 
                 int selectedRow = team2Table.getSelectedRow();
-                team1Table.setRowSelectionInterval(selectedRow, selectedRow);
-                String name = (String) team2Table.getValueAt(selectedRow, 0);
-                String position = (String) team2Table.getValueAt(selectedRow, 1);
-                int playerId = -1;
 
-                for (Players player : player) {
-                    if (player.getName().equals(name)) {
-                        playerId = player.getId();
-                        break;
-                    }
-                }
                 if (selectedRow >= 0 && selectedRow < team2Table.getRowCount()) {
-                    team2TableModel.removeRow(selectedRow);
-                    DefaultTableModel model = (DefaultTableModel) PrincipalTable.getModel();
-                    model.addRow(new Object[]{name, position});
-                    selectedPlayerT2.remove(playerId);
+                    String name = (String) team2Table.getValueAt(selectedRow, 0);
+                    String position = (String) team2Table.getValueAt(selectedRow, 1);
+                    int playerId = -1;
+
+                    for (Players player : player) {
+                        if (player.getName().equals(name)) {
+                            playerId = player.getId();
+                            break;
+                        }
+                    }
+
+                    if (playerId != -1 && selectedPlayerT2.contains(playerId)) {
+                        team2TableModel.removeRow(selectedRow);
+                        DefaultTableModel model = (DefaultTableModel) PrincipalTable.getModel();
+                        model.addRow(new Object[]{name, position});
+                        selectedPlayerT2.remove(Integer.valueOf(playerId)); // Use Integer.valueOf para remover pelo valor e não pelo índice
+                    }
                 } else {
                     JOptionPane.showMessageDialog(null, "Selecione um jogador.");
                 }
@@ -239,24 +253,20 @@ public class PlayersSelect extends JFrame {
         JButton Team2Add = new JButton(">>");
         Team2Add.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-//                if (autoSelect) {
-//                    System.out.println("fds");
-//                } else {
                 int selectedRow = PrincipalTable.getSelectedRow();
                 PrincipalTable.setRowSelectionInterval(selectedRow, selectedRow);
                 String name = (String) PrincipalTable.getValueAt(selectedRow, 0);
                 String position = (String) PrincipalTable.getValueAt(selectedRow, 1);
-                int playerId = -1; // Valor padrão, caso o jogador não seja encontrado
+                int playerId = -1;
 
                 for (Players player : player) {
                     if (player.getName().equals(name)) {
                         playerId = player.getId();
-                        break; // Você encontrou o jogador, então pode sair do loop
+                        break;
                     }
                 }
                 if (selectedPlayerT2.size() > 9) {
                     JOptionPane.showMessageDialog(null, "Quantidade maxima de jogadores (10) excedida.");
-                    System.out.println(selectedPlayerT2.size());
                 } else if (selectedRow >= 0 && selectedRow < player.size()) {
                     principalTableModel.removeRow(selectedRow);
                     DefaultTableModel model = (DefaultTableModel) team2Table.getModel();
@@ -266,8 +276,6 @@ public class PlayersSelect extends JFrame {
                     JOptionPane.showMessageDialog(null, "Selecione um jogador.");
                 }
             }
-
-            //}
         });
         Team2Add.setForeground(new Color(255, 255, 255));
         Team2Add.setBackground(new Color(59, 130, 246));
@@ -279,24 +287,49 @@ public class PlayersSelect extends JFrame {
                     JOptionPane.showMessageDialog(null, "A distribuição automática só pode ser utilizada uma vez.");
 
                 } else {
-                    Collections.shuffle(player);
 
-                    for (Players selectedPlayer : player.subList(0, 7)) {
-                        team1TableModel.addRow(new Object[]{selectedPlayer.getName(), selectedPlayer.getPosition()});
-                        selectedPlayerT1.add(selectedPlayer.getId());
+                    Set<Integer> selectedPlayerIDs = new HashSet<>();
+                    selectedPlayerIDs.addAll(selectedPlayerT1);
+                    selectedPlayerIDs.addAll(selectedPlayerT2);
+
+                    int team1Size = selectedPlayerT1.size();
+                    int team2Size = selectedPlayerT2.size();
+
+                    for (Players selectedPlayer : player) {
+                        if (team1Size < 7 && !selectedPlayerIDs.contains(selectedPlayer.getId())) {
+                            team1TableModel.addRow(new Object[]{selectedPlayer.getName(), selectedPlayer.getPosition()});
+                            selectedPlayerT1.add(selectedPlayer.getId());
+                            selectedPlayerIDs.add(selectedPlayer.getId());
+                            team1Size++;
+                        }
+
+                        if (team1Size >= 7) {
+                            break;
+                        }
                     }
 
-                    for (Players selectedPlayer : player.subList(7, 14)) {
-                        team2TableModel.addRow(new Object[]{selectedPlayer.getName(), selectedPlayer.getPosition()});
-                        selectedPlayerT2.add(selectedPlayer.getId());
+                    for (Players selectedPlayer : player) {
+                        if (team2Size < 7 && !selectedPlayerIDs.contains(selectedPlayer.getId())) {
+                            team2TableModel.addRow(new Object[]{selectedPlayer.getName(), selectedPlayer.getPosition()});
+                            selectedPlayerT2.add(selectedPlayer.getId());
+                            selectedPlayerIDs.add(selectedPlayer.getId());
+                            team2Size++;
+                        }
+
+                        if (team2Size >= 7) {
+                            break;
+                        }
                     }
 
                     DefaultTableModel principalModel = (DefaultTableModel) PrincipalTable.getModel();
                     principalModel.setRowCount(0);
 
-                    for (Players selectedPlayer : player.subList(14, player.size())) {
-                        principalModel.addRow(new Object[]{selectedPlayer.getName(), selectedPlayer.getPosition()});
+                    for (Players selectedPlayer : player) {
+                        if (!selectedPlayerIDs.contains(selectedPlayer.getId())) {
+                            principalModel.addRow(new Object[]{selectedPlayer.getName(), selectedPlayer.getPosition()});
+                        }
                     }
+
                     autoSelect = !autoSelect;
                 }
 

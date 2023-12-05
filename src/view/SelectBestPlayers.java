@@ -27,10 +27,8 @@ public class SelectBestPlayers extends JFrame {
     private ArrayList<Players> Team1Players;
     private ArrayList<Players> Team2Players;
 
-    private ArrayList<Players> Players;
     private ArrayList<Integer> players = new ArrayList<>();
     private static ArrayList<String> jogadores = new ArrayList<>();
-    private static ArrayList<String> playerName = new ArrayList<>();
 
     /**
      * Launch the application.
@@ -60,7 +58,6 @@ public class SelectBestPlayers extends JFrame {
         DAO dao = new DAO();
         Team1Players = dao.listarPlayersEmCasa(idMatch);
         Team2Players = dao.listarPlayersVisitantes(idMatch);
-        Players = dao.GetPlayersByMatch(idMatch);
         final int[] selectedPlayerT1 = {0};
         final int[] selectedPlayerT2 = {0};
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -83,7 +80,12 @@ public class SelectBestPlayers extends JFrame {
                 new String[]{
                         "Nome", "Posi\u00E7\u00E3o", "time"
                 }
-        ));
+        ) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        });
         PrincipalPane.setViewportView(PrincipalTalbe);
         DefaultTableModel PrincipalModel = (DefaultTableModel) PrincipalTalbe.getModel();
 
@@ -98,7 +100,13 @@ public class SelectBestPlayers extends JFrame {
                 new String[]{
                         "Nome", "Posi\u00E7\u00E3o"
                 }
-        ));
+
+        ) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false; // Isso torna todas as células da team2Table não editáveis
+            }
+        });
         team1Pane.setViewportView(team1Table);
         DefaultTableModel team1Model = (DefaultTableModel) team1Table.getModel();
         for (Players jogador : Team1Players) {
@@ -114,12 +122,14 @@ public class SelectBestPlayers extends JFrame {
         contentPane.add(Team1Name);
         team2Table = new JTable();
         team2Table.setModel(new DefaultTableModel(
-                new Object[][]{
-                },
-                new String[]{
-                        "Nome", "Posi\u00E7\u00E3o"
-                }
-        ));
+                new Object[][]{},
+                new String[]{"Nome", "Posi\u00E7\u00E3o"}
+        ) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false; // Isso torna todas as células da team2Table não editáveis
+            }
+        });
         team2Pane.setViewportView(team2Table);
         DefaultTableModel team2Model = (DefaultTableModel) team2Table.getModel();
         for (Players jogador : Team2Players) {
@@ -175,7 +185,6 @@ public class SelectBestPlayers extends JFrame {
                         players.add(selectedPlayer.getId());
                         jogadores.add(selectedPlayer.getName());
                         selectedPlayerT1[0]++;
-                        System.out.println(selectedPlayerT1[0]);
                     } else {
                         JOptionPane.showMessageDialog(null, "Você já atingiu a soma de gols do seu time nessa partida.");
                     }
@@ -200,7 +209,6 @@ public class SelectBestPlayers extends JFrame {
                         PrincipalModel.addRow(new Object[]{selectedPlayer.getName(), selectedPlayer.getPosition(), selectedPlayer.getSituation()});
                         players.add(selectedPlayer.getId());
                         jogadores.add(selectedPlayer.getName());
-                        System.out.println(jogadores);
                         selectedPlayerT2[0]++;
                     } else {
                         JOptionPane.showMessageDialog(null, "Você já atingiu a soma de gols do seu time nessa partida.");

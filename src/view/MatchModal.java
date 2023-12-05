@@ -110,16 +110,21 @@ public class MatchModal extends JFrame {
                 int gols1 = Integer.parseInt(result1.getText());
                 int gols2 = Integer.parseInt(result2.getText());
 
-                DAO.updateMatch(id, gols1, gols2, team1id, team2id);
-                dispose();
 
-                if (gols1 == 0 && gols2 == 0) {
-                    JOptionPane.showMessageDialog(null, "Selecione o melhor jogador da partida");
-                    BestPlayer.main(null, id);
-
+                if (gols1 < 0 || gols2 < 0) {
+                    JOptionPane.showMessageDialog(null, "Por favor, informe um resultado valido, o resultado não pode ser menor que 0");
                 } else {
-                    JOptionPane.showMessageDialog(null, "Selecione os Jogadores que marcaram gol nessa partida");
-                    SelectBestPlayers.main(id, team1, team2,gols1, gols2);
+                    DAO.updateMatch(id, gols1, gols2, team1id, team2id);
+
+                    if (gols1 == 0 && gols2 == 0) {
+                        //JOptionPane.showMessageDialog(null, "Selecione o melhor jogador da partida");
+                        BestPlayer.main(null, id);
+
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Selecione os Jogadores que marcaram gol nessa partida");
+                        SelectBestPlayers.main(id, team1, team2, gols1, gols2);
+                    }
+                    dispose();
                 }
             }
 

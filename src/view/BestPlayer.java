@@ -71,7 +71,7 @@ public class BestPlayer extends JFrame {
             cboxPlayers.setEnabled(false);
         }
 
-        JLabel lblNewLabel = new JLabel("Quem fez o gol mais bonito:");
+        JLabel lblNewLabel = new JLabel("Gol mais bonito:");
         lblNewLabel.setBounds(113, 63, 191, 14);
         contentPane.add(lblNewLabel);
 
