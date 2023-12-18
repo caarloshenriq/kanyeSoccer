@@ -4,7 +4,7 @@
 
 ## Apresentação
 
-Este é o repositório do projeto desenvolvido para a disciplina de Projeto Integrador 2 do curso de Análise e Desenvolvimento de Sistemas do 2º semestre. Nosso projeto consiste em um software de Gerenciamento de Partidas de Futebol, construído utilizando a linguagem de programação Java e integrado com um banco de dados MySQL.
+Este é o repositório do projeto desenvolvido para a disciplina de Projeto Integrador 2 do curso de Análise e Desenvolvimento de Sistemas do 2º semestre. Nosso projeto consiste em um software de Gerenciamento de Partidas de Futebol, construído utilizando a linguagem de programação Java e integrado com um banco de dados SQLITE.
 
 ## Objetivo
 
@@ -12,8 +12,8 @@ O principal objetivo deste projeto é criar uma ferramenta eficiente e intuitiva
 
 ## Funcionalidades Principais
 
-- Cadastro de Times: Registre os times participantes das partidas, incluindo informações como nome, cidade e cores do uniforme.
-- Agendamento de Partidas: Agende partidas entre os times, definindo data, horário e local.
+- Cadastro de Jogadores: Registre os jogadores participantes das partidas, incluindo informações como nome, numero posição.
+- Agendamento de Partidas: Agende partidas entre os times, definindo data.
 - Registro de Resultados: Registre os resultados das partidas, incluindo placar final e destaques individuais.
 - Estatísticas: Acompanhe estatísticas de desempenho dos times, como número de vitórias, derrotas, empates, artilheiros, etc.
 - Visualização de Calendário: Veja um calendário com as datas das partidas agendadas e os detalhes de cada jogo.
@@ -22,7 +22,7 @@ O principal objetivo deste projeto é criar uma ferramenta eficiente e intuitiva
 
 - Linguagem de Programação: Java
 - Banco de Dados: SQLITE
-- Interface Gráfica: Biblioteca JFrame (Java)
+- Interface Gráfica: Biblioteca Swing (Java)
 
 <!-- ## Como Executar o Projeto
 
